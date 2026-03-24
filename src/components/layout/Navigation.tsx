@@ -28,11 +28,11 @@ const navItems = [
   { to: "/biens", icon: Building2, label: "Biens" },
   { to: "/proprietaires", icon: Users, label: "Propriétaires" },
   { to: "/locataires", icon: UserCheck, label: "Locataires" },
-  { to: "/paiements", icon: CreditCard, label: "Paiements" },
-  { to: "/depenses", icon: Receipt, label: "Dépenses" },
-  { to: "/notifications", icon: Bell, label: "Notifications" },
-  { to: "/rapports", icon: FileText, label: "Rapports" },
-  { to: "/audit-logs", icon: Shield, label: "Audit" },
+  // { to: "/paiements", icon: CreditCard, label: "Paiements" },
+  // { to: "/depenses", icon: Receipt, label: "Dépenses" },
+  // { to: "/notifications", icon: Bell, label: "Notifications" },
+  // { to: "/rapports", icon: FileText, label: "Rapports" },
+  // { to: "/audit-logs", icon: Shield, label: "Audit" },
 ];
 
 export const Navigation = ({ mobile }: NavigationProps) => {
@@ -46,10 +46,10 @@ export const Navigation = ({ mobile }: NavigationProps) => {
               key={item.to}
               to={item.to}
               className={cn(
-                "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200",
-                "text-muted-foreground hover:text-primary hover:bg-accent/50 w-full active:scale-95"
+                "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200",
+                "text-primary-foreground/80 hover:text-primary-foreground hover:bg-white/10 w-full active:scale-95 hover:translate-x-1"
               )}
-              activeClassName="text-primary bg-accent shadow-sm font-semibold"
+              activeClassName="text-primary-foreground bg-white/20 shadow-sm font-semibold hover:bg-white/20 hover:translate-x-0"
             >
               <Icon className="h-4 w-4" />
               <span>{item.label}</span>

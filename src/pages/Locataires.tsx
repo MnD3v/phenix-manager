@@ -120,104 +120,106 @@ const Locataires = () => {
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
         </div>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
           {filteredContrats?.map((contrat, index) => (
-            <Card key={contrat.id} className="group hover:shadow-md transition-all duration-200 border-muted/60" style={{ animationDelay: `${index * 50}ms` }}>
-              <CardHeader className="flex flex-row items-center gap-4 pb-3">
-                <Avatar className="h-12 w-12 ring-1 ring-border transition-all">
-                  <AvatarFallback className="bg-primary/5 text-primary font-semibold text-sm">
-                    {getInitials(contrat.locataires?.nom || "")}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0 space-y-1">
-                  <CardTitle className="text-base font-semibold truncate leading-none">{contrat.locataires?.nom}</CardTitle>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-5 bg-green-500/10 text-green-700 hover:bg-green-500/20 border-green-500/20">
-                      Actif
-                    </Badge>
+            <Card key={contrat.id} className="group overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-2 border-primary/15 hover:border-primary/30 relative bg-card" style={{ animationDelay: `${index * 50}ms` }}>
+              <CardHeader className="pb-3 pt-5 bg-gradient-to-b from-muted/30 to-transparent">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-white font-bold text-lg shadow-sm ring-1 ring-primary/20 flex-shrink-0">
+                      {getInitials(contrat.locataires?.nom || "")}
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg font-bold leading-none mb-1.5 text-foreground">{contrat.locataires?.nom}</CardTitle>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <Badge className="text-[10px] px-2 py-0.5 h-5 bg-emerald-500 text-white hover:bg-emerald-600 border-transparent shadow-sm shadow-emerald-500/20">
+                          Actif
+                        </Badge>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Phone className="h-3.5 w-3.5 flex-shrink-0" />
-                    <span className="truncate">{contrat.locataires?.telephone}</span>
+              <CardContent className="space-y-5 pt-4">
+                <div className="space-y-3 text-sm px-2">
+                  <div className="flex items-center gap-3 text-muted-foreground p-2 rounded-lg bg-muted/30 border border-muted/50">
+                    <Phone className="h-4 w-4 flex-shrink-0 text-primary/70" strokeWidth={1.5} />
+                    <span className="truncate font-medium flex-1 text-foreground/80">{contrat.locataires?.telephone}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Building2 className="h-3.5 w-3.5 flex-shrink-0" />
-                    <span className="truncate">{contrat.biens?.nom}</span>
+                  <div className="flex items-center gap-3 text-muted-foreground px-2">
+                    <Building2 className="h-4 w-4 flex-shrink-0 text-primary/70" strokeWidth={1.5} />
+                    <span className="truncate font-medium text-foreground/80">{contrat.biens?.nom}</span>
                   </div>
                 </div>
 
-                <div className="pt-3 border-t">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Loyer mensuel</span>
-                    <span className="font-bold text-primary">
+                <div className="p-4 rounded-xl bg-gradient-to-br from-primary/5 to-transparent border border-primary/10 space-y-3">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground font-medium">Loyer mensuel</span>
+                    <span className="font-bold text-base text-foreground">
                       {contrat.loyer_mensuel.toLocaleString()} FCFA
                     </span>
                   </div>
                   {contrat.avance_mois > 0 && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">Avance</span>
-                      <Badge variant="outline" className="text-[10px] h-5">
+                    <div className="flex items-center justify-between text-sm border-t border-primary/10 pt-2">
+                      <span className="text-muted-foreground">Avance</span>
+                      <span className="font-bold text-primary">
                         {contrat.avance_mois} mois
-                      </Badge>
+                      </span>
                     </div>
                   )}
                 </div>
 
-                <div className="flex flex-col gap-2 pt-2">
+                <div className="flex flex-col gap-2 pt-1 border-t">
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
                     onClick={() => {
                       setSelectedContrat(contrat);
                       setViewContratOpen(true);
                     }}
-                    className="w-full h-8 text-xs hover:bg-accent/50"
+                    className="w-full h-9 mt-2 text-xs font-medium hover:bg-primary/10 text-primary"
                   >
-                    <FileText className="h-3.5 w-3.5 mr-2" />
+                    <FileText className="h-3.5 w-3.5 mr-2" strokeWidth={1.5} />
                     Détails du contrat
                   </Button>
                   {isAdmin && (
                     <>
                       <div className="flex gap-2">
                         <Button
-                          variant="outline"
+                          variant="ghost"
                           size="sm"
                           onClick={() => {
                             setSelectedLocataire(contrat.locataires);
                             setEditLocataireOpen(true);
                           }}
-                          className="flex-1 h-8 text-xs hover:bg-primary/5 hover:text-primary hover:border-primary/20"
+                          className="flex-1 h-9 text-xs font-medium hover:bg-primary/10 text-primary"
                         >
-                          <Edit className="h-3.5 w-3.5 mr-1.5" />
+                          <Edit className="h-3.5 w-3.5 mr-2" strokeWidth={1.5} />
                           Locataire
                         </Button>
                         <Button
-                          variant="outline"
+                          variant="ghost"
                           size="sm"
                           onClick={() => {
                             setSelectedContrat(contrat);
                             setEditContratOpen(true);
                           }}
-                          className="flex-1 h-8 text-xs hover:bg-primary/5 hover:text-primary hover:border-primary/20"
+                          className="flex-1 h-9 text-xs font-medium hover:bg-primary/10 text-primary"
                         >
-                          <Edit className="h-3.5 w-3.5 mr-1.5" />
+                          <Edit className="h-3.5 w-3.5 mr-2" strokeWidth={1.5} />
                           Contrat
                         </Button>
                       </div>
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
                         onClick={() => {
                           setSelectedContrat(contrat);
                           setDeleteContratOpen(true);
                         }}
-                        className="w-full h-8 text-xs hover:bg-destructive/5 hover:text-destructive hover:border-destructive/20"
+                        className="w-full h-9 text-xs font-medium hover:bg-destructive/10 text-destructive"
                       >
-                        <Trash2 className="h-3.5 w-3.5 mr-2" />
+                        <Trash2 className="h-3.5 w-3.5 mr-2" strokeWidth={1.5} />
                         Terminer le contrat
                       </Button>
                     </>
@@ -228,62 +230,64 @@ const Locataires = () => {
           ))}
 
           {inactiveLocataires?.map((locataire, index) => (
-            <Card key={locataire.id} className="group hover:shadow-md transition-all duration-200 border-muted/60 opacity-75 hover:opacity-100" style={{ animationDelay: `${index * 50}ms` }}>
-              <CardHeader className="flex flex-row items-center gap-4 pb-3">
-                <Avatar className="h-12 w-12 ring-1 ring-border transition-all grayscale">
-                  <AvatarFallback className="bg-muted text-muted-foreground font-semibold text-sm">
-                    {getInitials(locataire.nom || "")}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0 space-y-1">
-                  <CardTitle className="text-base font-semibold truncate leading-none text-muted-foreground">{locataire.nom}</CardTitle>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-5">
-                      Sans contrat actif
-                    </Badge>
+            <Card key={locataire.id} className="group overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-2 border-muted/60 relative bg-muted/5 opacity-80 hover:opacity-100" style={{ animationDelay: `${index * 50}ms` }}>
+              <CardHeader className="pb-3 pt-5 bg-gradient-to-b from-muted/20 to-transparent">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-xl bg-muted border border-muted-foreground/20 flex items-center justify-center text-muted-foreground font-bold text-lg grayscale flex-shrink-0 shadow-sm">
+                      {getInitials(locataire.nom || "")}
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg font-bold leading-none mb-1.5 text-muted-foreground">{locataire.nom}</CardTitle>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <Badge variant="outline" className="text-[10px] px-2 py-0.5 h-5 text-muted-foreground">
+                          Sans contrat actif
+                        </Badge>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Phone className="h-3.5 w-3.5 flex-shrink-0" />
-                    <span className="truncate">{locataire.telephone}</span>
+              <CardContent className="space-y-5 pt-4">
+                <div className="space-y-3 text-sm px-2">
+                  <div className="flex items-center gap-3 text-muted-foreground px-2">
+                    <Phone className="h-4 w-4 flex-shrink-0" strokeWidth={1.5} />
+                    <span className="truncate font-medium">{locataire.telephone}</span>
                   </div>
                 </div>
 
-                <div className="pt-3 border-t mt-8">
+                <div className="pt-3 border-t border-muted/30 mt-8">
                   <div className="text-xs text-muted-foreground text-center italic py-2">
                     Aucun contrat en cours
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-2 pt-2">
+                <div className="flex flex-col gap-2 pt-1">
                   {isAdmin && (
                     <>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 mt-2">
                         <Button
-                          variant="outline"
+                          variant="ghost"
                           size="sm"
                           onClick={() => {
                             setSelectedLocataire(locataire);
                             setEditLocataireOpen(true);
                           }}
-                          className="flex-1 h-8 text-xs hover:bg-primary/5 hover:text-primary hover:border-primary/20"
+                          className="flex-1 h-9 text-xs font-medium hover:bg-muted text-muted-foreground hover:text-foreground"
                         >
-                          <Edit className="h-3.5 w-3.5 mr-1.5" />
+                          <Edit className="h-3.5 w-3.5 mr-2" strokeWidth={1.5} />
                           Modifier
                         </Button>
                         <Button
-                          variant="outline"
+                          variant="ghost"
                           size="sm"
                           onClick={() => {
                             setSelectedLocataire(locataire);
                             setDeleteLocataireOpen(true);
                           }}
-                          className="flex-1 h-8 text-xs hover:bg-destructive/5 hover:text-destructive hover:border-destructive/20"
+                          className="flex-1 h-9 text-xs font-medium hover:bg-destructive/10 text-destructive grayscale hover:grayscale-0 transition-all"
                         >
-                          <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+                          <Trash2 className="h-3.5 w-3.5 mr-2" strokeWidth={1.5} />
                           Corbeille
                         </Button>
                       </div>

@@ -231,6 +231,7 @@ const Dashboard = () => {
             Voici un aperçu de votre activité immobilière d'aujourd'hui.
           </p>
         </div>
+        
 
         {/* Quick Actions (Pill buttons) */}
         <div className="flex flex-wrap items-center gap-3 pt-2">

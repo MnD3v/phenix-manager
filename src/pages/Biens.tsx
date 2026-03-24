@@ -91,7 +91,7 @@ const Biens = () => {
       ) : (
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
           {filteredBiens?.map((bien, index) => (
-            <Card key={bien.id} className="group overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-primary/10 hover:border-primary/30 relative bg-card" style={{ animationDelay: `${index * 50}ms` }}>
+            <Card key={bien.id} className="group overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-2 border-primary/15 hover:border-primary/30 relative bg-card" style={{ animationDelay: `${index * 50}ms` }}>
               <CardHeader className="pb-3 pt-5 bg-gradient-to-b from-muted/30 to-transparent">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-4">

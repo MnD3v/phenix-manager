@@ -38,11 +38,11 @@ export const Header = () => {
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[280px] sm:w-[320px] p-0 bg-sidebar border-r-0">
-                <div className="flex h-16 items-center px-6 border-b border-sidebar-border bg-white mb-4">
-                  <div className="flex items-center gap-3">
-                    <img src={logo} alt="Phenix Immobilier" className="h-10 w-auto rounded-lg shadow-sm" />
-                    <h1 className="text-xl font-bold text-foreground">PHENIX</h1>
+              <SheetContent side="left" className="w-[280px] sm:w-[320px] p-0 bg-primary border-r-0">
+                <div className="flex h-20 items-center px-6 bg-transparent mb-4 mt-2">
+                  <div className="flex items-center gap-3 w-full">
+                    <img src={logo} alt="Phenix Immobilier" className="h-8 w-auto rounded-lg shadow-sm bg-white p-1" />
+                    <h1 className="text-xl font-bold text-primary-foreground tracking-tight">PHENIX</h1>
                   </div>
                 </div>
                 <div className="px-3">
