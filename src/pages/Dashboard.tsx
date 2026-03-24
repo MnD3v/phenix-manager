@@ -223,15 +223,14 @@ const Dashboard = () => {
       {/* Header Soft */}
       <div className="flex flex-col gap-6 pb-2">
         <div className="space-y-2">
-          <h1 className="text-4xl sm:text-5xl font-serif text-foreground capitalize">
-            Hello {userName} !
+          <h1 className="text-4xl sm:text-5xl font-bold text-foreground tracking-tight">
+            Tableau de bord
           </h1>
           <p className="text-muted-foreground/80 flex items-center gap-2 text-sm">
-            <span className="text-base">🏢</span>
             Voici un aperçu de votre activité immobilière d'aujourd'hui.
           </p>
         </div>
-        
+
 
         {/* Quick Actions (Pill buttons) */}
         <div className="flex flex-wrap items-center gap-3 pt-2">
