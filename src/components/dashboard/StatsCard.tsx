@@ -1,56 +1,86 @@
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+type CardColor = "blue" | "violet" | "emerald" | "amber" | "rose" | "cyan" | "orange";
+
 interface StatsCardProps {
   title: string;
   value: string | number;
   icon?: LucideIcon;
   description?: string;
-  trend?: {
-    value: string;
-    isPositive: boolean;
-  };
+  color?: CardColor;
+  badge?: { label: string; variant: "warning" | "success" | "info" };
   className?: string;
   onClick?: () => void;
 }
+
+const colorConfig: Record<CardColor, { title: string; iconBg: string; iconColor: string }> = {
+  blue: { title: "text-blue-500", iconBg: "bg-blue-100", iconColor: "text-blue-500" },
+  violet: { title: "text-violet-500", iconBg: "bg-violet-100", iconColor: "text-violet-500" },
+  emerald: { title: "text-emerald-600", iconBg: "bg-emerald-100", iconColor: "text-emerald-600" },
+  amber: { title: "text-amber-500", iconBg: "bg-amber-100", iconColor: "text-amber-500" },
+  rose: { title: "text-rose-500", iconBg: "bg-rose-100", iconColor: "text-rose-500" },
+  cyan: { title: "text-cyan-600", iconBg: "bg-cyan-100", iconColor: "text-cyan-600" },
+  orange: { title: "text-orange-500", iconBg: "bg-orange-100", iconColor: "text-orange-500" },
+};
+
+const badgeConfig = {
+  warning: "bg-amber-100 text-amber-600",
+  success: "bg-emerald-100 text-emerald-600",
+  info: "bg-blue-100 text-blue-600",
+};
 
 export const StatsCard = ({
   title,
   value,
   icon: Icon,
   description,
+  color,
+  badge,
   className,
   onClick,
 }: StatsCardProps) => {
+  const c = color ? colorConfig[color] : null;
+
   return (
     <div
       className={cn(
-        "bg-[#f4f6f8]/80 backdrop-blur-sm rounded-3xl p-6 transition-all duration-300",
-        "flex flex-col gap-4 border-none shadow-none hover:bg-black/[0.03]",
-        onClick && "cursor-pointer active:scale-[0.98]",
+        "bg-white rounded-2xl p-5 border border-gray-100 shadow-sm transition-all duration-200",
+        "flex flex-col gap-3",
+        onClick && "cursor-pointer hover:shadow-md hover:border-gray-200 active:scale-[0.98]",
         className
       )}
       onClick={onClick}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-muted-foreground/70">
-          {Icon && <Icon className="h-[20px] w-[20px]" strokeWidth={1.25} />}
-        </div>
-      </div>
-
-      <div className="space-y-1">
-        <h3 className="text-3xl font-extrabold tracking-tight text-foreground/90">
-          {value}
-        </h3>
-        <p className="text-sm font-medium text-muted-foreground mt-1">
+      {/* Top row: title + icon */}
+      <div className="flex items-start justify-between gap-2">
+        <p className={cn("text-sm font-semibold leading-tight", c ? c.title : "text-muted-foreground")}>
           {title}
         </p>
+        {Icon && (
+          <div className={cn("flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center", c ? c.iconBg : "bg-muted")}>
+            <Icon className={cn("h-5 w-5", c ? c.iconColor : "text-muted-foreground")} strokeWidth={1.75} />
+          </div>
+        )}
       </div>
 
+      {/* Value */}
+      <h3 className="text-3xl font-extrabold tracking-tight text-gray-900">
+        {value}
+      </h3>
+
+      {/* Description */}
       {description && (
-        <div className="mt-auto pt-2 flex items-center gap-1.5 text-xs text-muted-foreground/60">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></svg>
-          {description}
+        <p className="text-xs text-muted-foreground leading-snug">{description}</p>
+      )}
+
+      {/* Badge */}
+      {badge && (
+        <div className="mt-1">
+          <span className={cn("inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full", badgeConfig[badge.variant])}>
+            {badge.variant === "success" && <span>✓</span>}
+            {badge.label}
+          </span>
         </div>
       )}
     </div>
