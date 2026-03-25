@@ -86,14 +86,14 @@ const Locataires = () => {
         </div>
         {isAdmin && (
           <div className="flex gap-2">
-            <Button
+            {/* <Button
               variant="destructive"
               className="gap-2"
               onClick={() => navigate("/arrieres")}
             >
               <FileText className="h-4 w-4" />
               Voir les Arriérés
-            </Button>
+            </Button> */}
             <RecycleBinDialog />
             <AddContratDialog />
           </div>
