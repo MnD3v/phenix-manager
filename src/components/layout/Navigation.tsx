@@ -21,6 +21,7 @@ import {
 
 interface NavigationProps {
   mobile?: boolean;
+  onNavClick?: () => void;
 }
 
 const navItems = [
@@ -28,14 +29,14 @@ const navItems = [
   { to: "/biens", icon: Building2, label: "Biens" },
   { to: "/proprietaires", icon: Users, label: "Propriétaires" },
   { to: "/locataires", icon: UserCheck, label: "Locataires" },
-  // { to: "/paiements", icon: CreditCard, label: "Paiements" },
+  { to: "/paiements", icon: CreditCard, label: "Paiements" },
   // { to: "/depenses", icon: Receipt, label: "Dépenses" },
   // { to: "/notifications", icon: Bell, label: "Notifications" },
   // { to: "/rapports", icon: FileText, label: "Rapports" },
   // { to: "/audit-logs", icon: Shield, label: "Audit" },
 ];
 
-export const Navigation = ({ mobile }: NavigationProps) => {
+export const Navigation = ({ mobile, onNavClick }: NavigationProps) => {
   if (mobile) {
     return (
       <nav className="flex flex-col space-y-2 w-full">
@@ -45,6 +46,7 @@ export const Navigation = ({ mobile }: NavigationProps) => {
             <NavLink
               key={item.to}
               to={item.to}
+              onClick={item.to !== "/" ? onNavClick : onNavClick} // or simply onClick={onNavClick}
               className={cn(
                 "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200",
                 "text-primary-foreground/80 hover:text-primary-foreground hover:bg-white/10 w-full active:scale-95 hover:translate-x-1"

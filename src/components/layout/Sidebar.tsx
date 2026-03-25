@@ -43,13 +43,13 @@ const navGroups = [
       { to: "/locataires", icon: UserCheck, label: "Locataires" },
     ]
   },
-  // {
-  //   title: "Finances",
-  //   items: [
-  //     { to: "/paiements", icon: Wallet, label: "Paiements" },
-  //     { to: "/depenses", icon: ReceiptText, label: "Dépenses" },
-  //   ]
-  // },
+  {
+    title: "Finances",
+    items: [
+      { to: "/paiements", icon: Wallet, label: "Paiements" },
+      // { to: "/depenses", icon: ReceiptText, label: "Dépenses" },
+    ]
+  },
   // {
   //   title: "Système",
   //   items: [

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Menu, LogOut, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -16,6 +17,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export const Header = () => {
   const { user, role, signOut } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSignOut = async () => {
     try {
@@ -32,13 +34,13 @@ export const Header = () => {
 
           {/* Logo et Menu Burger (Mobile seulement) */}
           <div className="flex lg:hidden items-center gap-2 sm:gap-3 min-w-0 flex-shrink">
-            <Sheet>
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild className="lg:hidden flex-shrink-0 mr-2">
-                <Button variant="ghost" size="icon" className="h-9 w-9 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground">
-                  <Menu className="h-5 w-5" />
+                <Button variant="ghost" size="icon" className="h-12 w-12 [&_svg]:size-7 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground shrink-0">
+                  <Menu strokeWidth={2.25} />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[280px] sm:w-[320px] p-0 bg-primary border-r-0">
+              <SheetContent side="left" className="w-[280px] sm:w-[320px] p-0 bg-primary border-r-0 [&>button]:text-white">
                 <div className="flex h-20 items-center px-6 bg-transparent mb-4 mt-2">
                   <div className="flex items-center gap-3 w-full">
                     <img src={logo} alt="Phenix Immobilier" className="h-8 w-auto rounded-lg shadow-sm bg-white p-1" />
@@ -46,7 +48,7 @@ export const Header = () => {
                   </div>
                 </div>
                 <div className="px-3">
-                  <Navigation mobile />
+                  <Navigation mobile onNavClick={() => setIsOpen(false)} />
                 </div>
               </SheetContent>
             </Sheet>
@@ -54,7 +56,7 @@ export const Header = () => {
             <img
               src={logo}
               alt="Phenix Immobilier"
-              className="h-8 sm:h-10 w-auto rounded-lg shadow-sm bg-white"
+              className="hidden sm:block h-8 sm:h-10 w-auto rounded-lg shadow-sm bg-white"
             />
           </div>
 
