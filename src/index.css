@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Arial Narrow – police unique du site */
+@font-face {
+  font-family: 'Arial Narrow';
+  src: url('/fonts/Arial Narrow/Arialn.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Arial Narrow';
+  src: url('/fonts/Arial Narrow/ArialTh.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */
@@ -126,6 +143,7 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground antialiased;
+    font-family: 'Arial Narrow', Arial, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
