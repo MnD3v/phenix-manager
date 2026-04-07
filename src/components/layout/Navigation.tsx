@@ -30,10 +30,10 @@ const navItems = [
   { to: "/proprietaires", icon: Users, label: "Propriétaires" },
   { to: "/locataires", icon: UserCheck, label: "Locataires" },
   { to: "/paiements", icon: CreditCard, label: "Paiements" },
-  // { to: "/depenses", icon: Receipt, label: "Dépenses" },
-  // { to: "/notifications", icon: Bell, label: "Notifications" },
-  // { to: "/rapports", icon: FileText, label: "Rapports" },
-  // { to: "/audit-logs", icon: Shield, label: "Audit" },
+  { to: "/depenses", icon: Receipt, label: "Dépenses" },
+  { to: "/notifications", icon: Bell, label: "Notifications" },
+  { to: "/rapports", icon: FileText, label: "Rapports" },
+  { to: "/audit-logs", icon: Shield, label: "Audit" },
 ];
 
 export const Navigation = ({ mobile, onNavClick }: NavigationProps) => {

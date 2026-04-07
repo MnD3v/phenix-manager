@@ -95,9 +95,7 @@ const Biens = () => {
               <CardHeader className="pb-3 pt-5 bg-gradient-to-b from-muted/30 to-transparent">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-white shadow-lg shadow-primary/20">
-                      <Building2 className="h-6 w-6" />
-                    </div>
+                    <Building2 className="h-8 w-8 text-blue-500 flex-shrink-0" />
                     <div>
                       <CardTitle className="text-lg font-bold leading-none mb-1.5 text-foreground">{bien.nom}</CardTitle>
                       <Badge variant="outline" className="text-[11px] font-medium h-5 border-primary/20 text-primary bg-primary/5">

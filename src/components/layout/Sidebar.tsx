@@ -32,7 +32,7 @@ const navGroups = [
     title: "Application",
     items: [
       { to: "/", icon: Home, label: "Tableau de bord" },
-      // { to: "/notifications", icon: BellRing, label: "Notifications" },
+      { to: "/notifications", icon: BellRing, label: "Notifications" },
     ]
   },
   {
@@ -47,16 +47,16 @@ const navGroups = [
     title: "Finances",
     items: [
       { to: "/paiements", icon: Wallet, label: "Paiements" },
-      // { to: "/depenses", icon: ReceiptText, label: "Dépenses" },
+      { to: "/depenses", icon: ReceiptText, label: "Dépenses" },
     ]
   },
-  // {
-  //   title: "Système",
-  //   items: [
-  //     { to: "/rapports", icon: FileSpreadsheet, label: "Rapports" },
-  //     { to: "/audit-logs", icon: ShieldCheck, label: "Audit" },
-  //   ]
-  // }
+  {
+    title: "Système",
+    items: [
+      { to: "/rapports", icon: FileSpreadsheet, label: "Rapports" },
+      { to: "/audit-logs", icon: ShieldCheck, label: "Audit" },
+    ]
+  }
 ];
 
 export const Sidebar = () => {
