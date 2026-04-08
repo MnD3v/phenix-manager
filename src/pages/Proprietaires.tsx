@@ -158,12 +158,12 @@ const Proprietaires = () => {
                       </div>
                     </div>
 
-                    <div className="flex flex-col gap-2 pt-1 border-t">
+                    <div className="flex flex-col gap-2 pt-3 border-t">
                       <Button
-                        variant="ghost"
+                        variant="default"
                         size="sm"
                         onClick={() => setViewingBiens(proprietaire)}
-                        className="w-full h-9 mt-2 text-xs font-medium hover:bg-primary/10 text-primary"
+                        className="w-full h-9 text-xs font-medium shadow-sm transition-all hover:translate-y-[-1px]"
                       >
                         <Building className="h-3.5 w-3.5 mr-2" strokeWidth={1.5} />
                         Voir les biens
@@ -171,19 +171,19 @@ const Proprietaires = () => {
                       {isAdmin && (
                         <div className="flex gap-2">
                           <Button
-                            variant="ghost"
+                            variant="outline"
                             size="sm"
                             onClick={() => setEditingProprietaire(proprietaire)}
-                            className="flex-1 h-9 text-xs font-medium hover:bg-primary/10 text-primary"
+                            className="flex-1 h-9 text-xs font-medium text-slate-600 hover:text-primary hover:border-primary/50 hover:bg-primary/5 shadow-sm transition-all"
                           >
                             <Edit className="h-3.5 w-3.5 mr-2" strokeWidth={1.5} />
                             Modifier
                           </Button>
                           <Button
-                            variant="ghost"
+                            variant="outline"
                             size="sm"
                             onClick={() => setDeletingProprietaire(proprietaire)}
-                            className="flex-1 h-9 text-xs font-medium hover:bg-destructive/10 text-destructive"
+                            className="flex-1 h-9 text-xs font-medium text-destructive hover:text-destructive hover:border-destructive/50 hover:bg-destructive/5 shadow-sm transition-all"
                           >
                             <Trash2 className="h-3.5 w-3.5 mr-2" strokeWidth={1.5} />
                             Supprimer

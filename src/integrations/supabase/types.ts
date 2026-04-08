@@ -462,6 +462,47 @@ export type Database = {
         }
         Relationships: []
       }
+      ventes: {
+        Row: {
+          bien_id: string
+          created_at: string
+          date_vente: string
+          email_acheteur: string | null
+          id: string
+          nom_acheteur: string
+          prix_vente: number
+          telephone_acheteur: string
+        }
+        Insert: {
+          bien_id: string
+          created_at?: string
+          date_vente?: string
+          email_acheteur?: string | null
+          id?: string
+          nom_acheteur: string
+          prix_vente: number
+          telephone_acheteur: string
+        }
+        Update: {
+          bien_id?: string
+          created_at?: string
+          date_vente?: string
+          email_acheteur?: string | null
+          id?: string
+          nom_acheteur?: string
+          prix_vente?: number
+          telephone_acheteur?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ventes_bien_id_fkey"
+            columns: ["bien_id"]
+            isOneToOne: false
+            referencedRelation: "biens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -483,7 +524,7 @@ export type Database = {
       | "eau"
       | "vidange"
       | "autre"
-      statut_bien: "disponible" | "occupe"
+      statut_bien: "disponible" | "occupe" | "vendu"
       statut_contrat: "actif" | "termine"
       statut_paiement: "paye" | "en_attente" | "retard"
       type_bien: "maison" | "boutique" | "chambre" | "magasin" | "villa"
@@ -623,7 +664,7 @@ export const Constants = {
         "vidange",
         "autre",
       ],
-      statut_bien: ["disponible", "occupe"],
+      statut_bien: ["disponible", "occupe", "vendu"],
       statut_contrat: ["actif", "termine"],
       statut_paiement: ["paye", "en_attente", "retard"],
       type_bien: ["maison", "boutique", "chambre", "magasin", "villa"],
