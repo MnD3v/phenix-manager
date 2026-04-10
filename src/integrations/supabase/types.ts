@@ -57,6 +57,9 @@ export type Database = {
           created_at: string
           description: string | null
           etat_des_lieux: string | null
+          est_meuble: boolean | null
+          nature: string | null
+          finalite: string | null
           id: string
           loyer_mensuel: number
           nom: string
@@ -73,6 +76,9 @@ export type Database = {
           created_at?: string
           description?: string | null
           etat_des_lieux?: string | null
+          est_meuble?: boolean | null
+          nature?: string | null
+          finalite?: string | null
           id?: string
           loyer_mensuel: number
           nom: string
@@ -89,6 +95,9 @@ export type Database = {
           created_at?: string
           description?: string | null
           etat_des_lieux?: string | null
+          est_meuble?: boolean | null
+          nature?: string | null
+          finalite?: string | null
           id?: string
           loyer_mensuel?: number
           nom?: string

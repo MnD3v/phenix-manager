@@ -18,7 +18,10 @@ interface EditBienDialogProps {
 
 export const EditBienDialog = ({ bien, open, onOpenChange }: EditBienDialogProps) => {
   const [nom, setNom] = useState("");
-  const [type, setType] = useState<"maison" | "boutique" | "chambre" | "magasin" | "villa">("maison");
+  const [nature, setNature] = useState<"bati" | "non_bati">("bati");
+  const [finalite, setFinalite] = useState<"louer" | "vendre">("louer");
+  const [type, setType] = useState<"maison" | "boutique" | "chambre" | "magasin" | "villa" | "terrain">("maison");
+  const [estMeuble, setEstMeuble] = useState<"meuble" | "non_meuble" | "">("");
   const [adresse, setAdresse] = useState("");
   const [proprietaireId, setProprietaireId] = useState("");
   const [loyerMensuel, setLoyerMensuel] = useState("");
@@ -54,6 +57,8 @@ export const EditBienDialog = ({ bien, open, onOpenChange }: EditBienDialogProps
   useEffect(() => {
     if (bien) {
       setNom(bien.nom || "");
+      setNature(bien.nature || "bati");
+      setFinalite(bien.finalite || "louer");
       setType(bien.type || "maison");
       setAdresse(bien.adresse || "");
       setProprietaireId(bien.proprietaire_id || "");
@@ -63,6 +68,7 @@ export const EditBienDialog = ({ bien, open, onOpenChange }: EditBienDialogProps
       setCommissionPourcentage(bien.commission_pourcentage?.toString() || "10");
       setVille(bien.ville || "");
       setQuartier(bien.quartier || "");
+      setEstMeuble(bien.est_meuble === true ? "meuble" : bien.est_meuble === false ? "non_meuble" : "");
     }
   }, [bien]);
 
@@ -72,7 +78,9 @@ export const EditBienDialog = ({ bien, open, onOpenChange }: EditBienDialogProps
         .from("biens")
         .update({
           nom,
-          type,
+          type: type as any,
+          nature,
+          finalite,
           adresse,
           proprietaire_id: proprietaireId,
           loyer_mensuel: parseFloat(loyerMensuel),
@@ -81,6 +89,7 @@ export const EditBienDialog = ({ bien, open, onOpenChange }: EditBienDialogProps
           commission_pourcentage: parseFloat(commissionPourcentage),
           ville: ville || null,
           quartier: quartier || null,
+          est_meuble: type !== "terrain" && estMeuble ? estMeuble === "meuble" : null,
         })
         .eq("id", bien.id);
       if (error) throw error;
@@ -128,20 +137,61 @@ export const EditBienDialog = ({ bien, open, onOpenChange }: EditBienDialogProps
             <Label htmlFor="nom">Nom du bien *</Label>
             <Input id="nom" value={nom} onChange={(e) => setNom(e.target.value)} required />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="type">Type *</Label>
-            <Select value={type} onValueChange={(v: any) => setType(v)}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="maison">Maison</SelectItem>
-                <SelectItem value="boutique">Boutique</SelectItem>
-                <SelectItem value="chambre">Chambre</SelectItem>
-                <SelectItem value="magasin">Magasin</SelectItem>
-                <SelectItem value="villa">Villa</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="nature">Nature *</Label>
+              <Select value={nature} onValueChange={(v: any) => setNature(v)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="bati">Immeuble Bâti</SelectItem>
+                  <SelectItem value="non_bati">Non Bâti</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="finalite">Finalité *</Label>
+              <Select value={finalite} onValueChange={(v: any) => setFinalite(v)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="louer">À Louer</SelectItem>
+                  <SelectItem value="vendre">À Vendre</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="type">Type *</Label>
+              <Select value={type} onValueChange={(v: any) => setType(v)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="maison">Maison</SelectItem>
+                  <SelectItem value="boutique">Boutique</SelectItem>
+                  <SelectItem value="chambre">Chambre</SelectItem>
+                  <SelectItem value="magasin">Magasin</SelectItem>
+                  <SelectItem value="villa">Villa</SelectItem>
+                  <SelectItem value="terrain">Terrain</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {nature === "bati" && type !== "terrain" && (
+              <div className="space-y-2">
+                <Label htmlFor="ameublement">Ameublement *</Label>
+                <Select value={estMeuble} onValueChange={(v: any) => setEstMeuble(v)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionner..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="meuble">Meublé</SelectItem>
+                    <SelectItem value="non_meuble">Non meublé</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">

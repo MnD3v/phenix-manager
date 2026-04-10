@@ -111,6 +111,7 @@ export const AddBienDialog = () => {
   // Step 3 fields
   const [nom, setNom] = useState("");
   const [type, setType] = useState<"maison" | "boutique" | "chambre" | "magasin" | "villa" | "terrain">("maison");
+  const [estMeuble, setEstMeuble] = useState<"meuble" | "non_meuble" | "">("");
   const [adresse, setAdresse] = useState("");
   const [proprietaireId, setProprietaireId] = useState("");
   const [montant, setMontant] = useState("");
@@ -144,25 +145,20 @@ export const AddBienDialog = () => {
 
   const addMutation = useMutation({
     mutationFn: async () => {
-      const descriptionFull = [
-        nature === "bati" ? "Immeuble Bâti" : "Non Bâti",
-        finalite === "louer" ? "À Louer" : "À Vendre",
-        description,
-      ]
-        .filter(Boolean)
-        .join(" | ");
-
       const { error } = await supabase.from("biens").insert({
         nom,
         type: (nature === "non_bati" ? "terrain" : type) as any,
         adresse,
         proprietaire_id: proprietaireId,
         loyer_mensuel: parseFloat(montant),
-        description: descriptionFull || null,
+        description: description || null,
         etat_des_lieux: etatDesLieux || null,
         commission_pourcentage: parseFloat(commissionPourcentage),
         ville: ville || null,
         quartier: quartier || null,
+        est_meuble: nature === "bati" ? estMeuble === "meuble" : null,
+        nature: nature || null,
+        finalite: finalite || null,
       });
       if (error) throw error;
     },
@@ -184,6 +180,7 @@ export const AddBienDialog = () => {
     setFinalite(null);
     setNom("");
     setType("maison");
+    setEstMeuble("");
     setAdresse("");
     setProprietaireId("");
     setMontant("");
@@ -213,6 +210,10 @@ export const AddBienDialog = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (nature === "bati" && !estMeuble) {
+      toast.error("Veuillez préciser si le bien est meublé ou non");
+      return;
+    }
     if (!proprietaireId) {
       toast.error("Veuillez sélectionner un propriétaire");
       return;
@@ -386,20 +387,34 @@ export const AddBienDialog = () => {
             </div>
 
             {nature === "bati" ? (
-              <div className="space-y-2">
-                <Label htmlFor="type">Type *</Label>
-                <Select value={type} onValueChange={(v: any) => setType(v)}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="maison">Maison</SelectItem>
-                    <SelectItem value="boutique">Boutique</SelectItem>
-                    <SelectItem value="chambre">Chambre</SelectItem>
-                    <SelectItem value="magasin">Magasin</SelectItem>
-                    <SelectItem value="villa">Villa</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="type">Type *</Label>
+                  <Select value={type} onValueChange={(v: any) => setType(v)}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="maison">Maison</SelectItem>
+                      <SelectItem value="boutique">Boutique</SelectItem>
+                      <SelectItem value="chambre">Chambre</SelectItem>
+                      <SelectItem value="magasin">Magasin</SelectItem>
+                      <SelectItem value="villa">Villa</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="ameublement">Ameublement *</Label>
+                  <Select value={estMeuble} onValueChange={(v: any) => setEstMeuble(v)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="meuble">Meublé</SelectItem>
+                      <SelectItem value="non_meuble">Non meublé</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             ) : (
               <input type="hidden" value="terrain" />
