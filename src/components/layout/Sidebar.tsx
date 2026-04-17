@@ -9,6 +9,7 @@ import {
   BellRing,
   FileSpreadsheet,
   ShieldCheck,
+  Briefcase,
   LogOut
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -48,6 +49,12 @@ const navGroups = [
     items: [
       { to: "/paiements", icon: Wallet, label: "Paiements" },
       { to: "/depenses", icon: ReceiptText, label: "Dépenses" },
+    ]
+  },
+  {
+    title: "Services",
+    items: [
+      { to: "/services", icon: Briefcase, label: "Autres Services" },
     ]
   },
   {

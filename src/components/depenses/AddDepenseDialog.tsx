@@ -49,7 +49,7 @@ export const AddDepenseDialog = () => {
 
       const { error } = await supabase.from("depenses").insert({
         bien_id: finalBienId,
-        proprietaire_id: selectedProprietaireId, // Nouvelle colonne ajoutée par migration
+        proprietaire_id: selectedProprietaireId || null,
         categorie,
         description,
         montant: parseFloat(montant),

@@ -26,7 +26,6 @@ export const EditBienDialog = ({ bien, open, onOpenChange }: EditBienDialogProps
   const [proprietaireId, setProprietaireId] = useState("");
   const [loyerMensuel, setLoyerMensuel] = useState("");
   const [description, setDescription] = useState("");
-  const [etatDesLieux, setEtatDesLieux] = useState("");
   const [commissionPourcentage, setCommissionPourcentage] = useState("10");
   const [ville, setVille] = useState("");
   const [quartier, setQuartier] = useState("");
@@ -63,8 +62,7 @@ export const EditBienDialog = ({ bien, open, onOpenChange }: EditBienDialogProps
       setAdresse(bien.adresse || "");
       setProprietaireId(bien.proprietaire_id || "");
       setLoyerMensuel(bien.loyer_mensuel?.toString() || "");
-      setDescription(bien.description || "");
-      setEtatDesLieux(bien.etat_des_lieux || "");
+      setDescription(bien.etat_des_lieux || "");
       setCommissionPourcentage(bien.commission_pourcentage?.toString() || "10");
       setVille(bien.ville || "");
       setQuartier(bien.quartier || "");
@@ -84,8 +82,8 @@ export const EditBienDialog = ({ bien, open, onOpenChange }: EditBienDialogProps
           adresse,
           proprietaire_id: proprietaireId,
           loyer_mensuel: parseFloat(loyerMensuel),
-          description: description || null,
-          etat_des_lieux: etatDesLieux || null,
+          description: null,
+          etat_des_lieux: description || null,
           commission_pourcentage: parseFloat(commissionPourcentage),
           ville: ville || null,
           quartier: quartier || null,
@@ -264,24 +262,20 @@ export const EditBienDialog = ({ bien, open, onOpenChange }: EditBienDialogProps
             </p>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="etatDesLieux">État des lieux</Label>
+            <Label htmlFor="description">Description (état des lieux)</Label>
             <Textarea
-              id="etatDesLieux"
+              id="description"
               placeholder="Description de l'état du bien..."
-              value={etatDesLieux}
-              onChange={(e) => setEtatDesLieux(e.target.value)}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
           </div>
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Annuler
             </Button>
             <Button type="submit" disabled={updateMutation.isPending}>
-              {updateMutation.isPending ? "Modification..." : "Modifier"}
+              {updateMutation.isPending ? "Enregistrement..." : "Enregistrer"}
             </Button>
           </div>
         </form>

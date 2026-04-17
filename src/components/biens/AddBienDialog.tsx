@@ -116,10 +116,10 @@ export const AddBienDialog = () => {
   const [proprietaireId, setProprietaireId] = useState("");
   const [montant, setMontant] = useState("");
   const [description, setDescription] = useState("");
-  const [etatDesLieux, setEtatDesLieux] = useState("");
   const [commissionPourcentage, setCommissionPourcentage] = useState("10");
   const [ville, setVille] = useState("");
   const [quartier, setQuartier] = useState("");
+  const [quantite, setQuantite] = useState(1);
 
   const queryClient = useQueryClient();
 
@@ -145,27 +145,30 @@ export const AddBienDialog = () => {
 
   const addMutation = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase.from("biens").insert({
-        nom,
+      const count = Math.max(1, quantite);
+      const records = Array.from({ length: count }, (_, i) => ({
+        nom: count > 1 ? `${nom} N°${i + 1}` : nom,
         type: (nature === "non_bati" ? "terrain" : type) as any,
         adresse,
         proprietaire_id: proprietaireId,
         loyer_mensuel: parseFloat(montant),
-        description: description || null,
-        etat_des_lieux: etatDesLieux || null,
+        description: null,
+        etat_des_lieux: description || null,
         commission_pourcentage: parseFloat(commissionPourcentage),
         ville: ville || null,
         quartier: quartier || null,
         est_meuble: nature === "bati" ? estMeuble === "meuble" : null,
         nature: nature || null,
         finalite: finalite || null,
-      });
+      }));
+      const { error } = await supabase.from("biens").insert(records);
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["biens"] });
       queryClient.invalidateQueries({ queryKey: ["biens-locations"] });
-      toast.success("Bien ajouté avec succès");
+      const count = Math.max(1, quantite);
+      toast.success(count > 1 ? `${count} biens ajoutés avec succès` : "Bien ajouté avec succès");
       setOpen(false);
       resetForm();
     },
@@ -185,10 +188,10 @@ export const AddBienDialog = () => {
     setProprietaireId("");
     setMontant("");
     setDescription("");
-    setEtatDesLieux("");
     setCommissionPourcentage("10");
     setVille("");
     setQuartier("");
+    setQuantite(1);
   };
 
   const handleOpenChange = (val: boolean) => {
@@ -381,9 +384,27 @@ export const AddBienDialog = () => {
               </span>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="nom">Nom du bien *</Label>
-              <Input id="nom" value={nom} onChange={(e) => setNom(e.target.value)} required />
+            <div className="grid grid-cols-3 gap-4">
+              <div className="col-span-2 space-y-2">
+                <Label htmlFor="nom">Nom du bien *</Label>
+                <Input id="nom" value={nom} onChange={(e) => setNom(e.target.value)} required />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="quantite">Exemplaires</Label>
+                <Input
+                  id="quantite"
+                  type="number"
+                  min="1"
+                  max="100"
+                  value={quantite}
+                  onChange={(e) => setQuantite(Math.max(1, parseInt(e.target.value) || 1))}
+                />
+                {quantite > 1 && (
+                  <p className="text-[10px] text-muted-foreground">
+                    "{nom} N°1" … "{nom} N°{quantite}"
+                  </p>
+                )}
+              </div>
             </div>
 
             {nature === "bati" ? (
@@ -496,19 +517,10 @@ export const AddBienDialog = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="etatDesLieux">État des lieux</Label>
-              <Textarea
-                id="etatDesLieux"
-                placeholder="Description de l'état du bien…"
-                value={etatDesLieux}
-                onChange={(e) => setEtatDesLieux(e.target.value)}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">Description (état des lieux)</Label>
               <Textarea
                 id="description"
+                placeholder="Description de l'état du bien…"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -524,7 +536,11 @@ export const AddBienDialog = () => {
                   Annuler
                 </Button>
                 <Button type="submit" disabled={addMutation.isPending}>
-                  {addMutation.isPending ? "Ajout en cours…" : "Ajouter le bien"}
+                  {addMutation.isPending
+                    ? "Ajout en cours…"
+                    : quantite > 1
+                      ? `Ajouter ${quantite} biens`
+                      : "Ajouter le bien"}
                 </Button>
               </div>
             </div>

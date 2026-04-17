@@ -622,30 +622,52 @@ const Rapports = () => {
             ) || [];
             return filteredProps.length > 0 ? (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {filteredProps.map(prop => (
-                  <Card key={prop.id} className="group hover:shadow-md transition-all duration-200 border-muted/60">
-                    <CardHeader className="pb-3 flex flex-row items-center gap-4">
-                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                        <Users className="h-5 w-5" />
+                {filteredProps.map(prop => {
+                  const propBiensCount = reportData?.biens.filter(b => b.proprietaire_id === prop.id).length || 0;
+
+                  return (
+                    <Card
+                      key={prop.id}
+                      className="group relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-muted/60 hover:border-primary/50"
+                    >
+                      <div className="absolute top-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/20">
+                          {propBiensCount} {propBiensCount > 1 ? 'Biens' : 'Bien'}
+                        </Badge>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <CardTitle className="text-base font-semibold truncate">{prop.nom}</CardTitle>
-                        <p className="text-sm text-muted-foreground truncate">{prop.telephone}</p>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <Button
-                        onClick={() => handleGenerateProprietaireReport(prop.id)}
-                        className="w-full gap-2 h-9 text-sm"
-                        disabled={isLoading}
-                        variant="outline"
-                      >
-                        <Printer className="h-4 w-4" />
-                        Générer Rapport
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
+
+                      <CardHeader className="pb-4 pt-6 flex flex-row items-center gap-4">
+                        <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                          <Building2 className="h-6 w-6" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <CardTitle className="text-lg font-bold truncate text-foreground group-hover:text-primary transition-colors">
+                            {prop.nom}
+                          </CardTitle>
+                          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                            <Users className="h-3.5 w-3.5" />
+                            <span className="truncate">{prop.telephone}</span>
+                          </div>
+                        </div>
+                      </CardHeader>
+
+                      <CardContent className="pb-6">
+                        <Button
+                          onClick={() => handleGenerateProprietaireReport(prop.id)}
+                          className="w-full gap-2 h-10 font-medium transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground shadow-sm"
+                          disabled={isLoading}
+                          variant="outline"
+                        >
+                          <Printer className="h-4 w-4" />
+                          Générer le Rapport
+                        </Button>
+                      </CardContent>
+
+                      {/* Subtile background decoration */}
+                      <div className="absolute -bottom-6 -right-6 h-24 w-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors" />
+                    </Card>
+                  );
+                })}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-16 text-center border rounded-lg bg-muted/5 border-dashed">

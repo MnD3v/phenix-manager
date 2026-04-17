@@ -39,7 +39,7 @@ export const genererMessageRappel = (locataire: LocataireEnRetard): string => {
     const totalFormate = locataire.montant_total_du.toLocaleString('fr-FR');
 
     return `Bonjour ${locataire.locataire_nom}, nous vous rappelons que le loyer de ${locataire.bien_nom} (${loyerFormate} FCFA/mois) pour ${moisStr} n'a pas encore été payé. Total dû: ${totalFormate} FCFA. Vous avez encore 72h pour régler sous peine d'amende de 10%. Merci de régulariser votre situation. 
-phenix IMMO - Tel: +228 92 18 40 65`;
+phenix IMMO - Tel: +228 91 77 15 36`;
 };
 
 export const detecterLocatairesEnRetard = async (forceDetection = false): Promise<LocataireEnRetard[]> => {

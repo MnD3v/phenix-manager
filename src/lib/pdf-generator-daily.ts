@@ -4,9 +4,8 @@ import autoTable from "jspdf-autotable";
 // Load DM Sans fonts
 const loadFonts = async (doc: jsPDF) => {
     const fontFiles = [
-        { url: "/fonts/DMSans-Regular.ttf", name: "DM Sans", style: "normal", filename: "DMSans-Regular.ttf" },
-        { url: "/fonts/DMSans-Bold.ttf", name: "DM Sans", style: "bold", filename: "DMSans-Bold.ttf" },
-        { url: "/fonts/DMSans-Italic.ttf", name: "DM Sans", style: "italic", filename: "DMSans-Italic.ttf" },
+        { url: "/fonts/Arial Narrow/Arialn.ttf", name: "Arial Narrow", style: "normal", filename: "Arialn.ttf" },
+        { url: "/fonts/Arial Narrow/arial.ttf", name: "Arial", style: "normal", filename: "arial.ttf" },
     ];
 
     for (const font of fontFiles) {
@@ -55,7 +54,7 @@ export const generateDailyReportPDF2 = async (
     logoBase64: string
 ) => {
     const doc = new jsPDF();
-    // await loadFonts(doc);
+    await loadFonts(doc);
 
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
@@ -63,26 +62,28 @@ export const generateDailyReportPDF2 = async (
     const contentWidth = pageWidth - 2 * margin;
     let currentY = margin;
 
-    doc.setFont("Times", "normal");
+    doc.setFont("Arial Narrow", "normal");
 
     // HEADER
     if (logoBase64) {
         try {
-            doc.addImage(logoBase64, "JPEG", margin, currentY, 25, 25);
+            doc.setFillColor(255, 255, 255);
+            doc.rect(margin, currentY, 25, 25, "F");
+            doc.addImage(logoBase64, "PNG", margin, currentY, 25, 25);
         } catch (error) {
             console.error("Error adding logo:", error);
         }
     }
 
     doc.setFontSize(18);
-    doc.setFont("Times", "bold");
+    doc.setFont("Arial Narrow", "bold");
     doc.setTextColor(0, 0, 0);
     doc.text("AGENCE IMMOBILIERE PHENIX", logoBase64 ? margin + 30 : margin, currentY + 8);
 
     doc.setFontSize(12);
-    doc.setFont("Times", "normal");
-    doc.text("Tel: +228 92 18 40 65", logoBase64 ? margin + 30 : margin, currentY + 14);
-    doc.text("www.pheniximmobilier.tech", logoBase64 ? margin + 30 : margin, currentY + 19);
+    doc.setFont("Arial Narrow", "normal");
+    doc.text("Tel: +228 91 77 15 36", logoBase64 ? margin + 30 : margin, currentY + 14);
+    doc.text("Email: essoham.aledi@gmail.com", logoBase64 ? margin + 30 : margin, currentY + 19);
 
     const dateFormatted = new Date(selectedDate).toLocaleDateString('fr-FR', {
         day: 'numeric',
@@ -91,10 +92,10 @@ export const generateDailyReportPDF2 = async (
     });
 
     doc.setFontSize(11);
-    doc.setFont("Times", "normal");
+    doc.setFont("Arial Narrow", "normal");
     doc.text("RAPPORT JOURNALIER", pageWidth - margin, currentY + 8, { align: "right" });
     doc.setFontSize(11);
-    doc.setFont("Times", "normal");
+    doc.setFont("Arial Narrow", "normal");
     doc.text(dateFormatted, pageWidth - margin, currentY + 14, { align: "right" });
 
     currentY += 30;
@@ -107,7 +108,7 @@ export const generateDailyReportPDF2 = async (
 
     // TABLEAU DES PAIEMENTS
     doc.setFontSize(13);
-    doc.setFont("Times", "bold");
+    doc.setFont("Arial Narrow", "bold");
     doc.setTextColor(0, 0, 0);
     doc.text("LES PAIEMENTS", margin, currentY);
     currentY += 4;
@@ -129,7 +130,7 @@ export const generateDailyReportPDF2 = async (
         body: paiementsData,
         theme: "grid",
         styles: {
-            font: "Times",
+            font: "Arial Narrow",
             lineWidth: 0.1,
             lineColor: [0, 0, 0],
         },
@@ -172,7 +173,7 @@ export const generateDailyReportPDF2 = async (
     }
 
     doc.setFontSize(13);
-    doc.setFont("Times", "bold");
+    doc.setFont("Arial Narrow", "bold");
     doc.setTextColor(0, 0, 0);
     doc.text("LES DÉPENSES", margin, currentY);
     currentY += 4;
@@ -193,7 +194,7 @@ export const generateDailyReportPDF2 = async (
         body: depensesData,
         theme: "grid",
         styles: {
-            font: "Times",
+            font: "Arial Narrow",
             lineWidth: 0.1,
             lineColor: [0, 0, 0],
         },
@@ -241,7 +242,7 @@ export const generateDailyReportPDF2 = async (
     doc.setLineWidth(0.1);
     doc.roundedRect(margin, currentY, boxWidth, 18, 2, 2);
     doc.setFontSize(10);
-    doc.setFont("Times", "bold");
+    doc.setFont("Arial Narrow", "bold");
     doc.setTextColor(0, 0, 0);
     doc.text("TOTAL PAIEMENTS", margin + boxWidth / 2, currentY + 6, { align: "center" });
     doc.setFontSize(14);
@@ -252,7 +253,7 @@ export const generateDailyReportPDF2 = async (
     doc.setDrawColor(0, 0, 0);
     doc.roundedRect(margin + boxWidth + 6, currentY, boxWidth, 18, 2, 2);
     doc.setFontSize(10);
-    doc.setFont("Times", "bold");
+    doc.setFont("Arial Narrow", "bold");
     doc.setTextColor(0, 0, 0);
     doc.text("TOTAL DÉPENSES", margin + boxWidth + 6 + boxWidth / 2, currentY + 6, { align: "center" });
     doc.setFontSize(14);
@@ -264,7 +265,7 @@ export const generateDailyReportPDF2 = async (
     doc.setDrawColor(0, 0, 0);
     doc.roundedRect(margin + 2 * (boxWidth + 6), currentY, boxWidth, 18, 2, 2);
     doc.setFontSize(10);
-    doc.setFont("Times", "bold");
+    doc.setFont("Arial Narrow", "bold");
     doc.setTextColor(0, 0, 0);
     doc.text("SOLDE NET", margin + 2 * (boxWidth + 6) + boxWidth / 2, currentY + 6, { align: "center" });
     doc.setFontSize(14);
@@ -273,10 +274,23 @@ export const generateDailyReportPDF2 = async (
 
     currentY += 25;
 
+    // SIGNATURE
+    currentY += 15;
+    if (currentY > pageHeight - 30) {
+        doc.addPage();
+        currentY = margin;
+    }
+    doc.setFontSize(11);
+    doc.setFont("Arial Narrow", "normal");
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Fait à Kara le, ${new Date().toLocaleDateString("fr-FR")}`, pageWidth - margin, currentY, { align: "right" });
+    doc.setFont("Arial Narrow", "bold");
+    doc.text("Le Directeur", pageWidth - margin, currentY + 10, { align: "right" });
+
     // Footer
     doc.setFontSize(9);
     doc.setTextColor(120, 120, 120);
-    doc.setFont("Times", "italic");
+    doc.setFont("Arial Narrow", "italic");
     doc.text("Rapport genere automatiquement par Phenix Immobilier", pageWidth / 2, pageHeight - 10, { align: "center" });
 
     const fileName = `Rapport_Journalier_${selectedDate}.pdf`;

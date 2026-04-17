@@ -96,7 +96,9 @@ const Depenses = () => {
   const totalDepenses = currentMonthDepenses.reduce((sum, d) => sum + parseFloat(d.montant.toString()), 0);
   const reparations = currentMonthDepenses.filter((d) => d.categorie === "reparation").reduce((sum, d) => sum + parseFloat(d.montant.toString()), 0);
   const electricite = currentMonthDepenses.filter((d) => d.categorie === "electricite").reduce((sum, d) => sum + parseFloat(d.montant.toString()), 0);
-  const autres = totalDepenses - reparations - electricite;
+  const eau = currentMonthDepenses.filter((d) => d.categorie === "eau").reduce((sum, d) => sum + parseFloat(d.montant.toString()), 0);
+  const vidange = currentMonthDepenses.filter((d) => d.categorie === "vidange").reduce((sum, d) => sum + parseFloat(d.montant.toString()), 0);
+  const autres = totalDepenses - reparations - electricite - eau - vidange;
 
   const filteredDepenses = depenses?.filter(
     (d) =>
@@ -137,10 +139,12 @@ const Depenses = () => {
         {isAdmin && <AddDepenseDialog />}
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         <StatsCard title="Total Dépenses" value={`${totalDepenses.toLocaleString()} FCFA`} icon={DollarSign} />
         <StatsCard title="Réparations" value={`${reparations.toLocaleString()} FCFA`} icon={Wrench} />
         <StatsCard title="Électricité" value={`${electricite.toLocaleString()} FCFA`} icon={Zap} />
+        <StatsCard title="Eau" value={`${eau.toLocaleString()} FCFA`} icon={Droplet} />
+        <StatsCard title="Vidange" value={`${vidange.toLocaleString()} FCFA`} icon={Receipt} />
         <StatsCard title="Autres" value={`${autres.toLocaleString()} FCFA`} icon={Droplet} />
       </div>
 

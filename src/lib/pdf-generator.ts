@@ -13,7 +13,7 @@ export const imageToBase64 = (url: string): Promise<string> => {
       const ctx = canvas.getContext("2d");
       if (ctx) {
         ctx.drawImage(img, 0, 0);
-        resolve(canvas.toDataURL("image/jpeg"));
+        resolve(canvas.toDataURL("image/png"));
       } else {
         reject(new Error("Could not get canvas context"));
       }
@@ -26,9 +26,8 @@ export const imageToBase64 = (url: string): Promise<string> => {
 // Load DM Sans fonts
 const loadFonts = async (doc: jsPDF) => {
   const fontFiles = [
-    { url: "/fonts/DMSans-Regular.ttf", name: "DM Sans", style: "normal", filename: "DMSans-Regular.ttf" },
-    { url: "/fonts/DMSans-Bold.ttf", name: "DM Sans", style: "bold", filename: "DMSans-Bold.ttf" },
-    { url: "/fonts/DMSans-Italic.ttf", name: "DM Sans", style: "italic", filename: "DMSans-Italic.ttf" },
+    { url: "/fonts/Arial Narrow/Arialn.ttf", name: "Arial Narrow", style: "normal", filename: "Arialn.ttf" },
+    { url: "/fonts/Arial Narrow/arial.ttf", name: "Arial", style: "normal", filename: "arial.ttf" },
   ];
 
   for (const font of fontFiles) {
@@ -150,37 +149,39 @@ export const generateReceiptPDF = async (
   const drawReceipt = (startY: number) => {
     let currentY = startY;
 
-    doc.setFont("Times", "normal");
+    doc.setFont("Arial Narrow", "normal");
 
     // HEADER
     if (logoBase64) {
       try {
-        doc.addImage(logoBase64, "JPEG", margin, currentY, 18, 18);
+        doc.setFillColor(255, 255, 255);
+        doc.rect(margin, currentY, 18, 18, "F");
+        doc.addImage(logoBase64, "PNG", margin, currentY, 18, 18);
       } catch (error) {
         console.error("Error adding logo:", error);
       }
     }
 
     doc.setFontSize(12);
-    doc.setFont("Times", "bold");
+    doc.setFont("Arial Narrow", "bold");
     doc.setTextColor(0, 0, 0);
     doc.text("AGENCE IMMOBILIERE PHENIX", logoBase64 ? margin + 22 : margin, currentY + 5);
 
     doc.setFontSize(10);
-    doc.setFont("Times", "normal");
+    doc.setFont("Arial Narrow", "normal");
     doc.setTextColor(0, 0, 0);
-    doc.text("Tel: +228 92 18 40 65", logoBase64 ? margin + 22 : margin, currentY + 10);
-    doc.text("www.pheniximmobilier.tech", logoBase64 ? margin + 22 : margin, currentY + 14);
+    doc.text("Tel: +228 91 77 15 36", logoBase64 ? margin + 22 : margin, currentY + 10);
+    doc.text("Email: essoham.aledi@gmail.com", logoBase64 ? margin + 22 : margin, currentY + 14);
 
     const receiptNumber = generateReceiptNumber(paiement.id, paiement.date_paiement);
     doc.setFontSize(11);
-    doc.setFont("Times", "bold");
+    doc.setFont("Arial Narrow", "bold");
     doc.setTextColor(0, 0, 0);
     doc.text("FACTURE", pageWidth - margin, currentY + 4, { align: "right" });
 
     doc.setFontSize(9);
     doc.setTextColor(0, 0, 0);
-    doc.setFont("Times", "normal");
+    doc.setFont("Arial Narrow", "normal");
     doc.text(`N°: ${receiptNumber}`, pageWidth - margin, currentY + 8, { align: "right" });
     doc.text(`Date: ${new Date(paiement.date_paiement).toLocaleDateString("fr-FR")}`, pageWidth - margin, currentY + 12, { align: "right" });
 
@@ -199,11 +200,11 @@ export const generateReceiptPDF = async (
     doc.rect(margin, currentY, colWidth, 18);
 
     doc.setFontSize(9);
-    doc.setFont("Times", "bold");
+    doc.setFont("Arial Narrow", "bold");
     doc.setTextColor(0, 0, 0);
     doc.text("LOCATAIRE", margin + 2, currentY + 4);
     doc.setTextColor(0, 0, 0);
-    doc.setFont("Times", "normal");
+    doc.setFont("Arial Narrow", "normal");
     doc.text(truncateText(paiement.locataire.nom, 28), margin + 2, currentY + 8);
     doc.text(`Tel: ${paiement.locataire.telephone}`, margin + 2, currentY + 12);
     if (paiement.locataire.adresse) {
@@ -217,11 +218,11 @@ export const generateReceiptPDF = async (
     doc.rect(col2X, currentY, colWidth, 18);
 
     doc.setFontSize(9);
-    doc.setFont("Times", "bold");
+    doc.setFont("Arial Narrow", "bold");
     doc.setTextColor(0, 0, 0);
     doc.text("BIEN LOUÉ", col2X + 2, currentY + 4);
     doc.setTextColor(0, 0, 0);
-    doc.setFont("Times", "normal");
+    doc.setFont("Arial Narrow", "normal");
     doc.text(truncateText(paiement.bien.nom, 28), col2X + 2, currentY + 8);
     doc.setFontSize(8);
     doc.text(truncateText(paiement.bien.adresse, 30), col2X + 2, currentY + 12);
@@ -242,7 +243,7 @@ export const generateReceiptPDF = async (
     doc.rect(margin, currentY, contentWidth, 6);
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(8);
-    doc.setFont("Times", "bold");
+    doc.setFont("Arial Narrow", "bold");
     doc.text(typeLabels[paiement.type] || "PAIEMENT", pageWidth / 2, currentY + 4, { align: "center" });
     doc.setTextColor(0, 0, 0);
 
@@ -301,7 +302,7 @@ export const generateReceiptPDF = async (
       body: tableData,
       theme: "grid",
       styles: {
-        font: "Times",
+        font: "Arial Narrow",
         lineWidth: 0.1,
         lineColor: [0, 0, 0],
       },
@@ -339,7 +340,7 @@ export const generateReceiptPDF = async (
     doc.rect(margin, currentY, contentWidth, 8);
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(12);
-    doc.setFont("Times", "bold");
+    doc.setFont("Arial Narrow", "bold");
     doc.text("TOTAL PAYE:", margin + 3, currentY + 5);
     doc.text(formatMontant(paiement.montant), pageWidth - margin - 3, currentY + 5, { align: "right" });
     doc.setTextColor(0, 0, 0);
@@ -357,11 +358,11 @@ export const generateReceiptPDF = async (
       doc.rect(margin, currentY, contentWidth, 7);
 
       doc.setFontSize(8);
-      doc.setFont("Times", "bold");
+      doc.setFont("Arial Narrow", "bold");
       doc.setTextColor(0, 0, 0);
       doc.text("PERIODE:", margin + 2, currentY + 4);
       doc.setTextColor(0, 0, 0);
-      doc.setFont("Times", "normal");
+      doc.setFont("Arial Narrow", "normal");
       const periodeText = `${startMois.toLocaleDateString("fr-FR", { month: "short", year: "numeric" })} au ${endMois.toLocaleDateString("fr-FR", { month: "short", year: "numeric" })} (${nombreMois} mois)`;
       doc.text(periodeText, margin + 18, currentY + 4);
 
@@ -379,10 +380,10 @@ export const generateReceiptPDF = async (
       doc.rect(margin, currentY, contentWidth, 7);
 
       doc.setFontSize(8);
-      doc.setFont("Times", "bold");
+      doc.setFont("Arial Narrow", "bold");
       doc.setTextColor(0, 0, 0);
       doc.text("PROCHAIN PAIEMENT:", margin + 2, currentY + 4);
-      doc.setFont("Times", "normal");
+      doc.setFont("Arial Narrow", "normal");
       const nextPaymentText = `AVANT LE 10 ${nextMonth.toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}`;
       doc.text(nextPaymentText, pageWidth - margin - 2, currentY + 4, { align: "right" });
       doc.setTextColor(0, 0, 0);
@@ -393,7 +394,7 @@ export const generateReceiptPDF = async (
     // FOOTER
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(8);
-    doc.setFont("Times", "italic");
+    doc.setFont("Arial Narrow", "italic");
     doc.text("Ce document fait foi de paiement. Merci. - Phenix Immobilier",
       pageWidth / 2, currentY + 5, { align: "center" });
   };
@@ -489,54 +490,58 @@ export const generateProprietaireRapportPDF = async (
   const monthDate = new Date(selectedMonth + "-01");
   const monthLabel = monthDate.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
 
-  // HEADER avec style du document Word
+  // HEADER
   if (logoBase64) {
     try {
-      doc.addImage(logoBase64, "JPEG", margin, margin, 18, 18);
+      doc.setFillColor(255, 255, 255);
+      doc.rect(margin, margin, 20, 20, "F");
+      doc.addImage(logoBase64, "PNG", margin, margin, 20, 20);
     } catch (error) {
       console.error("Error adding logo:", error);
     }
   }
 
   doc.setFontSize(16);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.setTextColor(0, 0, 0);
-  doc.text("AGENCE IMMOBILIERE PHENIX", logoBase64 ? margin + 22 : margin, margin + 5);
+  doc.text("AGENCE IMMOBILIERE PHENIX", logoBase64 ? margin + 25 : margin, margin + 7);
 
   doc.setFontSize(10);
-  doc.setFont("Times", "normal");
-  doc.text("Tel: +228 92 18 40 65", logoBase64 ? margin + 22 : margin, margin + 10);
-  doc.text("www.pheniximmobilier.tech", logoBase64 ? margin + 22 : margin, margin + 14);
+  doc.setFont("Arial Narrow", "normal");
+  doc.text("Tel: +228 91 77 15 36", logoBase64 ? margin + 25 : margin, margin + 12);
+  doc.text("Email: essoham.aledi@gmail.com", logoBase64 ? margin + 25 : margin, margin + 17);
 
-  currentY = margin + 22;
+  doc.setFontSize(14);
+  doc.setFont("Arial Narrow", "bold");
+  doc.text("RAPPORT MENSUEL", pageWidth - margin, margin + 7, { align: "right" });
+
+  doc.setFontSize(10);
+  doc.setFont("Arial Narrow", "normal");
+  doc.text(monthLabel.toUpperCase(), pageWidth - margin, margin + 12, { align: "right" });
+  doc.text(`Fait le: ${new Date().toLocaleDateString("fr-FR")}`, pageWidth - margin, margin + 17, { align: "right" });
+
+  currentY = margin + 25;
 
   doc.setDrawColor(0, 0, 0);
-  doc.setLineWidth(0.8);
+  doc.setLineWidth(0.5);
   doc.line(margin, currentY, pageWidth - margin, currentY);
 
-  currentY += 8;
+  currentY += 10;
 
-  // TITRE DU RAPPORT
+  // TITRE CENTRAL ENCADRÉ (SOBRIÉTÉ)
   doc.setDrawColor(0, 0, 0);
-  doc.setLineWidth(0.1);
-  doc.rect(margin, currentY, contentWidth, 12);
+  doc.setLineWidth(0.3);
+  doc.rect(margin, currentY - 6, pageWidth - (2 * margin), 10);
   doc.setFontSize(14);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.setTextColor(0, 0, 0);
-  doc.text(`SITUATION DU MOIS DE ${monthLabel.toUpperCase()}`, pageWidth / 2, currentY + 8, { align: "center" });
+  doc.text(`SITUATION DU MOIS DE ${monthLabel.toUpperCase()}`, pageWidth / 2, currentY, { align: "center" });
 
-  currentY += 16;
+  currentY += 8;
+  doc.setFontSize(12);
+  doc.text(`PROPRIETAIRE: ${data.proprietaire.nom.toUpperCase()}`, pageWidth / 2, currentY, { align: "center" });
 
-  // NOM DU PROPRIETAIRE
-  doc.setDrawColor(0, 0, 0);
-  doc.setLineWidth(0.1);
-  doc.rect(margin, currentY, contentWidth, 10);
-  doc.setFontSize(13);
-  doc.setFont("Times", "bold");
-  doc.setTextColor(0, 0, 0);
-  doc.text(`PROPRIETAIRE: ${data.proprietaire.nom.toUpperCase()}`, pageWidth / 2, currentY + 7, { align: "center" });
-
-  currentY += 14;
+  currentY += 12;
 
   // STATISTIQUES CHAMBRES
   const statWidth = contentWidth / 2 - 2;
@@ -545,7 +550,7 @@ export const generateProprietaireRapportPDF = async (
   doc.setLineWidth(0.1);
   doc.roundedRect(margin, currentY, statWidth, 14, 2, 2);
   doc.setFontSize(11);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.setTextColor(0, 0, 0);
   doc.text("Nombre de biens", margin + statWidth / 2, currentY + 5, { align: "center" });
   doc.setFontSize(16);
@@ -563,7 +568,7 @@ export const generateProprietaireRapportPDF = async (
 
   // TABLEAU DES ENTREES (Locataires)
   doc.setFontSize(13);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.setTextColor(0, 0, 0);
   doc.text("LES ENTRÉES", margin, currentY);
   currentY += 4;
@@ -595,7 +600,7 @@ export const generateProprietaireRapportPDF = async (
     body: locatairesData,
     theme: "grid",
     styles: {
-      font: "Times",
+      font: "Arial Narrow",
       lineWidth: 0.1,
       lineColor: [0, 0, 0],
     },
@@ -604,17 +609,16 @@ export const generateProprietaireRapportPDF = async (
       textColor: [0, 0, 0],
       lineWidth: 0.1,
       lineColor: [0, 0, 0],
-      fontSize: 10,
       fontStyle: "bold",
       halign: "center",
-      cellPadding: 2,
+      cellPadding: 3,
     },
     bodyStyles: {
       fontSize: 10,
       cellPadding: 2,
     },
     columnStyles: {
-      0: { halign: "left", cellWidth: 35 },
+      0: { halign: "left" }, // Let this take the rest of the space
       1: { halign: "right", cellWidth: 20 },
       2: { halign: "center", cellWidth: 28 },
       3: { halign: "right", cellWidth: 22 },
@@ -681,13 +685,13 @@ export const generateProprietaireRapportPDF = async (
   autoTable(doc, {
     startY: currentY,
     head: [
-      [{ content: 'Les Dépenses', colSpan: 2, styles: { halign: 'center', fontSize: 13, fontStyle: 'bold', fillColor: [240, 240, 240] } }],
+      [{ content: 'Les Dépenses', colSpan: 2, styles: { halign: 'center', fontSize: 13, fontStyle: 'bold' } }],
       ['Motifs', 'Mts']
     ],
     body: depensesEtRecapData,
     theme: "grid",
     styles: {
-      font: "Times",
+      font: "Arial Narrow",
       lineWidth: 0.1,
       lineColor: [0, 0, 0],
       fontSize: 11,
@@ -703,8 +707,8 @@ export const generateProprietaireRapportPDF = async (
       halign: "center",
     },
     columnStyles: {
-      0: { halign: "center", cellWidth: 120 }, // Center alignment for Motifs distinct from previous left
-      1: { halign: "center", cellWidth: 40 }, // Center alignment for Amounts to match image
+      0: { halign: "left" }, // Let this take the rest of the space
+      1: { halign: "right", cellWidth: 40 }, // Amount column fixed width
     },
     margin: { left: margin, right: margin },
     alternateRowStyles: { fillColor: [255, 255, 255] },
@@ -735,9 +739,22 @@ export const generateProprietaireRapportPDF = async (
   currentY = (doc as any).lastAutoTable.finalY + 10;
 
 
+  // SIGNATURE
+  currentY += 15;
+  if (currentY > pageHeight - 30) {
+    doc.addPage();
+    currentY = margin;
+  }
+  doc.setFontSize(11);
+  doc.setFont("Arial Narrow", "normal");
+  doc.setTextColor(0, 0, 0);
+  doc.text(`Fait à Kara le, ${new Date().toLocaleDateString("fr-FR")}`, pageWidth - margin, currentY, { align: "right" });
+  doc.setFont("Arial Narrow", "bold");
+  doc.text("Le Directeur", pageWidth - margin, currentY + 10, { align: "right" });
+
   // FOOTER
   doc.setFontSize(9);
-  doc.setFont("Times", "italic");
+  doc.setFont("Arial Narrow", "italic");
   doc.setTextColor(0, 0, 0);
   doc.text(`Rapport généré le ${new Date().toLocaleDateString("fr-FR")} - Phenix Immobilier`, pageWidth / 2, pageHeight - 8, { align: "center" });
 
@@ -799,40 +816,51 @@ export const generateAgenceRapportPDF = async (
   // HEADER
   if (logoBase64) {
     try {
-      doc.addImage(logoBase64, "JPEG", margin, margin, 18, 18);
+      doc.setFillColor(255, 255, 255);
+      doc.rect(margin, margin, 20, 20, "F");
+      doc.addImage(logoBase64, "PNG", margin, margin, 20, 20);
     } catch (error) {
       console.error("Error adding logo:", error);
     }
   }
 
   doc.setFontSize(16);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.setTextColor(0, 0, 0);
-  doc.text("AGENCE IMMOBILIERE PHENIX", logoBase64 ? margin + 22 : margin, margin + 5);
+  doc.text("AGENCE IMMOBILIERE PHENIX", logoBase64 ? margin + 25 : margin, margin + 7);
 
   doc.setFontSize(10);
-  doc.setFont("Times", "normal");
-  doc.text("Tel: +228 92 18 40 65", logoBase64 ? margin + 22 : margin, margin + 10);
-  doc.text("www.pheniximmobilier.tech", logoBase64 ? margin + 22 : margin, margin + 14);
+  doc.setFont("Arial Narrow", "normal");
+  doc.text("Tel: +228 91 77 15 36", logoBase64 ? margin + 25 : margin, margin + 12);
+  doc.text("Email: essoham.aledi@gmail.com", logoBase64 ? margin + 25 : margin, margin + 17);
 
-  currentY = margin + 22;
+  doc.setFontSize(14);
+  doc.setFont("Arial Narrow", "bold");
+  doc.text("RAPPORT MENSUEL AGENCE", pageWidth - margin, margin + 7, { align: "right" });
+
+  doc.setFontSize(10);
+  doc.setFont("Arial Narrow", "normal");
+  doc.text(monthLabel.toUpperCase(), pageWidth - margin, margin + 12, { align: "right" });
+  doc.text(`Fait le: ${new Date().toLocaleDateString("fr-FR")}`, pageWidth - margin, margin + 17, { align: "right" });
+
+  currentY = margin + 25;
 
   doc.setDrawColor(0, 0, 0);
-  doc.setLineWidth(0.8);
+  doc.setLineWidth(0.5);
   doc.line(margin, currentY, pageWidth - margin, currentY);
 
-  currentY += 8;
+  currentY += 10;
 
-  // TITRE
+  // TITRE CENTRAL ENCADRÉ (SOBRIÉTÉ)
   doc.setDrawColor(0, 0, 0);
-  doc.setLineWidth(0.1);
-  doc.rect(margin, currentY, contentWidth, 14);
+  doc.setLineWidth(0.3);
+  doc.rect(margin, currentY - 6, pageWidth - (2 * margin), 10);
   doc.setFontSize(14);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.setTextColor(0, 0, 0);
-  doc.text(`BILAN DU MOIS DE ${monthLabel.toUpperCase()}`, pageWidth / 2, currentY + 9, { align: "center" });
+  doc.text(`BILAN MENSUEL DE L'AGENCE - ${monthLabel.toUpperCase()}`, pageWidth / 2, currentY, { align: "center" });
 
-  currentY += 20;
+  currentY += 12;
 
   // STATISTIQUES GENERALES
   const statW = (contentWidth - 12) / 4;
@@ -850,7 +878,7 @@ export const generateAgenceRapportPDF = async (
     doc.setLineWidth(0.1);
     doc.roundedRect(x, currentY, statW, 20, 2, 2);
     doc.setFontSize(8);
-    doc.setFont("Times", "bold");
+    doc.setFont("Arial Narrow", "bold");
     doc.setTextColor(0, 0, 0);
     doc.text(stat.label, x + statW / 2, currentY + 7, { align: "center" });
     doc.setFontSize(14);
@@ -861,7 +889,7 @@ export const generateAgenceRapportPDF = async (
 
   // TABLEAU PAR PROPRIETAIRE
   doc.setFontSize(11);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.setTextColor(0, 0, 0);
   doc.text("RÉCAPITULATIF PAR PROPRIÉTAIRE", margin, currentY);
   currentY += 5;
@@ -888,7 +916,7 @@ export const generateAgenceRapportPDF = async (
     body: propData,
     theme: "grid",
     styles: {
-      font: "Times",
+      font: "Arial Narrow",
       lineWidth: 0.1,
       lineColor: [0, 0, 0],
     },
@@ -905,7 +933,7 @@ export const generateAgenceRapportPDF = async (
       fontSize: 9,
     },
     columnStyles: {
-      0: { halign: "left", cellWidth: 50 },
+      0: { halign: "left" },
       1: { halign: "right", cellWidth: 30 },
       2: { halign: "right", cellWidth: 30 },
       3: { halign: "right", cellWidth: 30 },
@@ -931,7 +959,7 @@ export const generateAgenceRapportPDF = async (
   }
 
   doc.setFontSize(11);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.setTextColor(0, 0, 0);
   doc.text("BILAN FINANCIER DE L'AGENCE", margin, currentY);
   currentY += 6;
@@ -943,7 +971,7 @@ export const generateAgenceRapportPDF = async (
   doc.setLineWidth(0.1);
   doc.roundedRect(margin, currentY, financeBox, 25, 3, 3);
   doc.setFontSize(10);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.setTextColor(0, 0, 0);
   doc.text("COMMISSIONS GAGNÉES", margin + financeBox / 2, currentY + 8, { align: "center" });
   doc.setFontSize(16);
@@ -958,11 +986,24 @@ export const generateAgenceRapportPDF = async (
   doc.setFontSize(16);
   doc.text(formatMontant(data.totals.benefice_net), margin + financeBox + 10 + financeBox / 2, currentY + 19, { align: "center" });
 
-  // FOOTER
-  doc.setFontSize(7);
-  doc.setFont("Times", "italic");
+  // SIGNATURE
+  currentY += 20;
+  if (currentY > pageHeight - 40) {
+    doc.addPage();
+    currentY = margin + 20;
+  }
+  doc.setFontSize(11);
+  doc.setFont("Arial Narrow", "normal");
   doc.setTextColor(0, 0, 0);
-  doc.text(`Rapport interne généré le ${new Date().toLocaleDateString("fr-FR")} - CONFIDENTIEL - Phenix Immobilier`, pageWidth / 2, pageHeight - 8, { align: "center" });
+  doc.text(`Fait à Kara le, ${new Date().toLocaleDateString("fr-FR")}`, pageWidth - margin, currentY, { align: "right" });
+  doc.setFont("Arial Narrow", "bold");
+  doc.text("Le Directeur", pageWidth - margin, currentY + 10, { align: "right" });
+
+  // FOOTER
+  doc.setFontSize(9);
+  doc.setFont("Arial Narrow", "italic");
+  doc.setTextColor(100, 100, 100);
+  doc.text("Phenix Immobilier & Services - Votre partenaire de confiance", pageWidth / 2, pageHeight - 10, { align: "center" });
 
   const fileName = `Rapport_Agence_${selectedMonth}.pdf`;
   doc.save(fileName);
@@ -1011,22 +1052,24 @@ export const generateContratPDF = async (contrat: any, logoBase64?: string) => {
 
   if (logoBase64) {
     try {
-      doc.addImage(logoBase64, "JPEG", margin, currentY, 18, 18);
+      doc.setFillColor(255, 255, 255);
+      doc.rect(margin, currentY, 18, 18, "F");
+      doc.addImage(logoBase64, "PNG", margin, currentY, 18, 18);
     } catch (error) {
       console.error("Error adding logo:", error);
     }
   }
 
   doc.setFontSize(15);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.setTextColor(0, 0, 0);
   doc.text("AGENCE IMMOBILIERE PHENIX", logoBase64 ? margin + 22 : margin, currentY + 5);
 
   doc.setFontSize(10);
-  doc.setFont("Times", "normal");
+  doc.setFont("Arial Narrow", "normal");
   doc.setTextColor(0, 0, 0);
-  doc.text("Tel: +228 92 18 40 65", logoBase64 ? margin + 22 : margin, currentY + 10);
-  doc.text("www.pheniximmobilier.tech", logoBase64 ? margin + 22 : margin, currentY + 14);
+  doc.text("Tel: +228 91 77 15 36", logoBase64 ? margin + 22 : margin, currentY + 10);
+  doc.text("Email: essoham.aledi@gmail.com", logoBase64 ? margin + 22 : margin, currentY + 14);
 
   currentY += 22;
 
@@ -1036,7 +1079,7 @@ export const generateContratPDF = async (contrat: any, logoBase64?: string) => {
   currentY += 8;
 
   doc.setFontSize(18);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.setTextColor(0, 0, 0);
   const titleType = contrat.biens?.type === "boutique" || contrat.biens?.type === "magasin"
     ? "CONTRAT DE BAIL A USAGE COMMERCIAL"
@@ -1046,7 +1089,7 @@ export const generateContratPDF = async (contrat: any, logoBase64?: string) => {
   currentY += 10;
 
   doc.setFontSize(14);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.setTextColor(0, 0, 0);
   doc.text("ENTRE LES SOUSSIGNES", margin, currentY);
   currentY += 6;
@@ -1054,64 +1097,64 @@ export const generateContratPDF = async (contrat: any, logoBase64?: string) => {
 
 
   doc.setFontSize(12);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.text("LE BAILLEUR:", margin + 2, currentY + 3);
-  doc.setFont("Times", "normal");
+  doc.setFont("Arial Narrow", "normal");
   doc.text(`Mr/Mme ${proprietaireNom}`, margin + 50, currentY + 3);
   currentY += 8;
 
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.text("Represente par:", margin + 2, currentY + 3);
-  doc.setFont("Times", "normal");
-  doc.text("L'AGENCE IMMOBILIERE PHENIX - Tel: 92 18 40 65", margin + 50, currentY + 3);
+  doc.setFont("Arial Narrow", "normal");
+  doc.text("L'AGENCE IMMOBILIERE PHENIX - Tel: 91 77 15 36", margin + 50, currentY + 3);
   currentY += 10;
 
 
 
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.text("LE PRENEUR:", margin + 2, currentY + 3);
-  doc.setFont("Times", "normal");
+  doc.setFont("Arial Narrow", "normal");
   const preneurInfo = `${contrat.locataires?.nom || ""}${contrat.locataires?.telephone ? " - Tel: " + contrat.locataires.telephone : ""}`;
   doc.text(preneurInfo, margin + 50, currentY + 3);
   currentY += 8;
 
   if (contrat.locataires?.piece_identite) {
-    doc.setFont("Times", "bold");
+    doc.setFont("Arial Narrow", "bold");
     doc.text("Piece d'identite:", margin + 2, currentY + 3);
-    doc.setFont("Times", "normal");
+    doc.setFont("Arial Narrow", "normal");
     doc.text(contrat.locataires.piece_identite, margin + 50, currentY + 3);
     currentY += 8;
   }
 
   if (contrat.locataires?.adresse) {
-    doc.setFont("Times", "bold");
+    doc.setFont("Arial Narrow", "bold");
     doc.text("Adresse:", margin + 2, currentY + 3);
-    doc.setFont("Times", "normal");
+    doc.setFont("Arial Narrow", "normal");
     doc.text(contrat.locataires.adresse, margin + 30, currentY + 3);
   }
   currentY += 12;
 
   doc.setFontSize(11);
-  doc.setFont("Times", "italic");
+  doc.setFont("Arial Narrow", "italic");
   doc.setTextColor(0, 0, 0);
   doc.text("Conformement aux dispositions du Code Civil Togolais relatives au louage de choses", margin, currentY);
   currentY += 8;
 
   doc.setFontSize(14);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.text("IL A ETE CONVENU CE QUI SUIT:", margin, currentY);
   currentY += 8;
 
   // ETAT DES LIEUX
   checkNewPage(25);
   doc.setFontSize(12);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.setTextColor(0, 0, 0);
   doc.text("ETAT DES LIEUX", margin, currentY);
   currentY += 5;
 
   doc.setFontSize(11);
-  doc.setFont("Times", "normal");
+  doc.setFont("Arial Narrow", "normal");
   const etatDesLieuxText = contrat.biens?.etat_des_lieux || "Non precise";
   const etatLines = doc.splitTextToSize(etatDesLieuxText, contentWidth);
   for (const line of etatLines) {
@@ -1164,13 +1207,13 @@ export const generateContratPDF = async (contrat: any, logoBase64?: string) => {
     checkNewPage(25);
 
     doc.setFontSize(12);
-    doc.setFont("Times", "bold");
+    doc.setFont("Arial Narrow", "bold");
     doc.setTextColor(0, 0, 0);
     doc.text(article.title, margin, currentY);
     currentY += 5;
 
     doc.setFontSize(11);
-    doc.setFont("Times", "normal");
+    doc.setFont("Arial Narrow", "normal");
     const lines = doc.splitTextToSize(article.content, contentWidth);
     for (const line of lines) {
       checkNewPage(6);
@@ -1186,18 +1229,18 @@ export const generateContratPDF = async (contrat: any, logoBase64?: string) => {
 
   // PREMIERE SECTION - DEBUT DE BAIL
   doc.setFontSize(12);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.setTextColor(0, 0, 0);
   doc.text("DEBUT DE BAIL - SIGNATURES", pageWidth / 2, currentY, { align: "center" });
   currentY += 8;
 
   doc.setFontSize(10);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.text("L'AGENCE", margin + sigWidth / 2, currentY, { align: "center" });
   doc.text("LE PRENEUR", margin + sigWidth + 10 + sigWidth / 2, currentY, { align: "center" });
   currentY += 3;
 
-  doc.setFont("Times", "normal");
+  doc.setFont("Arial Narrow", "normal");
   doc.setFontSize(9);
   doc.text("(Cachet + Signature)", margin + sigWidth / 2, currentY, { align: "center" });
   doc.text("(Signature)", margin + sigWidth + 10 + sigWidth / 2, currentY, { align: "center" });
@@ -1212,18 +1255,18 @@ export const generateContratPDF = async (contrat: any, logoBase64?: string) => {
 
   // DEUXIEME SECTION - FIN DE BAIL
   doc.setFontSize(12);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.setTextColor(0, 0, 0);
   doc.text("FIN DE BAIL - SIGNATURES", pageWidth / 2, currentY, { align: "center" });
   currentY += 8;
 
   doc.setFontSize(10);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.text("L'AGENCE", margin + sigWidth / 2, currentY, { align: "center" });
   doc.text("LE PRENEUR", margin + sigWidth + 10 + sigWidth / 2, currentY, { align: "center" });
   currentY += 3;
 
-  doc.setFont("Times", "normal");
+  doc.setFont("Arial Narrow", "normal");
   doc.setFontSize(9);
   doc.text("(Cachet + Signature)", margin + sigWidth / 2, currentY, { align: "center" });
   doc.text("(Signature)", margin + sigWidth + 10 + sigWidth / 2, currentY, { align: "center" });
@@ -1236,7 +1279,7 @@ export const generateContratPDF = async (contrat: any, logoBase64?: string) => {
   currentY += 38;
 
   doc.setFontSize(10);
-  doc.setFont("Times", "italic");
+  doc.setFont("Arial Narrow", "italic");
   doc.text(`Fait en double exemplaire a KARA, le ${new Date().toLocaleDateString("fr-FR")}`, pageWidth / 2, currentY, { align: "center" });
 
   addPageFooter();
@@ -1262,84 +1305,90 @@ export const generateRapportPDF = async (financialData: any, selectedMonth: stri
   const monthDate = new Date(selectedMonth + "-01");
   const monthLabel = monthDate.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
 
+  // HEADER
   if (logoBase64) {
     try {
-      doc.addImage(logoBase64, "JPEG", margin, currentY, 18, 18);
+      doc.setFillColor(255, 255, 255);
+      doc.rect(margin, margin, 20, 20, "F");
+      doc.addImage(logoBase64, "PNG", margin, margin, 20, 20);
     } catch (error) {
       console.error("Error adding logo:", error);
     }
   }
 
   doc.setFontSize(16);
-  doc.setFont("Times", "bold");
-  doc.setTextColor(41, 128, 185);
-  doc.text("Phenix Immobilier", logoBase64 ? margin + 22 : margin, currentY + 6);
+  doc.setFont("Arial Narrow", "bold");
+  doc.setTextColor(0, 0, 0);
+  doc.text("AGENCE IMMOBILIERE PHENIX", logoBase64 ? margin + 25 : margin, margin + 7);
 
   doc.setFontSize(10);
-  doc.setFont("Times", "normal");
-  doc.setTextColor(80, 80, 80);
-  doc.text("Rapport Financier Mensuel", logoBase64 ? margin + 22 : margin, currentY + 11);
-  doc.text("+228 92 18 40 65 | www.pheniximmobilier.tech", logoBase64 ? margin + 22 : margin, currentY + 15);
+  doc.setFont("Arial Narrow", "normal");
+  doc.text("Tel: +228 91 77 15 36", logoBase64 ? margin + 25 : margin, margin + 12);
+  doc.text("Email: essoham.aledi@gmail.com", logoBase64 ? margin + 25 : margin, margin + 17);
 
-  doc.setFontSize(12);
-  doc.setFont("Times", "bold");
-  doc.setTextColor(0, 0, 0);
-  doc.text(`Mois: ${monthLabel.charAt(0).toUpperCase() + monthLabel.slice(1)}`, pageWidth - margin, currentY + 8, { align: "right" });
-  doc.setFontSize(9);
-  doc.setFont("Times", "normal");
-  doc.text(`Genere le ${new Date().toLocaleDateString("fr-FR")}`, pageWidth - margin, currentY + 13, { align: "right" });
+  doc.setFontSize(14);
+  doc.setFont("Arial Narrow", "bold");
+  doc.text("RAPPORT FINANCIER", pageWidth - margin, margin + 7, { align: "right" });
 
-  currentY += 22;
+  doc.setFontSize(10);
+  doc.setFont("Arial Narrow", "normal");
+  doc.text(monthLabel.toUpperCase(), pageWidth - margin, margin + 12, { align: "right" });
+  doc.text(`Fait le: ${new Date().toLocaleDateString("fr-FR")}`, pageWidth - margin, margin + 17, { align: "right" });
 
-  doc.setDrawColor(41, 128, 185);
-  doc.setLineWidth(0.8);
+  currentY = margin + 25;
+
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.5);
   doc.line(margin, currentY, pageWidth - margin, currentY);
-  currentY += 8;
+  currentY += 10;
 
-  doc.setFontSize(18);
-  doc.setFont("Times", "bold");
+  // TITRE CENTRAL ENCADRÉ (SOBRIÉTÉ)
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.3);
+  doc.rect(margin, currentY - 6, pageWidth - (2 * margin), 10);
+  doc.setFontSize(14);
+  doc.setFont("Arial Narrow", "bold");
   doc.setTextColor(0, 0, 0);
-  doc.text("RAPPORT FINANCIER", pageWidth / 2, currentY, { align: "center" });
+  doc.text(`RAPPORT FINANCIER DU MOIS DE ${monthLabel.toUpperCase()}`, pageWidth / 2, currentY, { align: "center" });
+
   currentY += 10;
 
   const cardWidth = (contentWidth - 10) / 3;
 
-  doc.setFillColor(220, 252, 231);
-  doc.roundedRect(margin, currentY, cardWidth, 22, 3, 3, "F");
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.1);
+  doc.roundedRect(margin, currentY, cardWidth, 22, 3, 3);
   doc.setFontSize(10);
-  doc.setFont("Times", "normal");
-  doc.setTextColor(34, 197, 94);
+  doc.setFont("Arial Narrow", "normal");
+  doc.setTextColor(0, 0, 0);
   doc.text("REVENUS TOTAUX", margin + cardWidth / 2, currentY + 6, { align: "center" });
   doc.setFontSize(13);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.text(formatMontant(financialData.totals.revenus), margin + cardWidth / 2, currentY + 15, { align: "center" });
 
-  doc.setFillColor(254, 226, 226);
-  doc.roundedRect(margin + cardWidth + 5, currentY, cardWidth, 22, 3, 3, "F");
-  doc.setTextColor(239, 68, 68);
+  doc.roundedRect(margin + cardWidth + 5, currentY, cardWidth, 22, 3, 3);
+  doc.setTextColor(0, 0, 0);
   doc.setFontSize(10);
-  doc.setFont("Times", "normal");
+  doc.setFont("Arial Narrow", "normal");
   doc.text("DEPENSES TOTALES", margin + cardWidth + 5 + cardWidth / 2, currentY + 6, { align: "center" });
   doc.setFontSize(13);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.text(formatMontant(financialData.totals.depenses), margin + cardWidth + 5 + cardWidth / 2, currentY + 15, { align: "center" });
 
-  const beneficeColor = financialData.totals.benefice >= 0 ? [59, 130, 246] : [239, 68, 68];
-  doc.setFillColor(beneficeColor[0] >= 100 ? 219 : 254, beneficeColor[0] >= 100 ? 234 : 226, beneficeColor[0] >= 100 ? 254 : 226);
-  doc.roundedRect(pageWidth - margin - cardWidth, currentY, cardWidth, 22, 3, 3, "F");
-  doc.setTextColor(beneficeColor[0], beneficeColor[1], beneficeColor[2]);
+  doc.roundedRect(pageWidth - margin - cardWidth, currentY, cardWidth, 22, 3, 3);
+  doc.setTextColor(0, 0, 0);
   doc.setFontSize(10);
-  doc.setFont("Times", "normal");
+  doc.setFont("Arial Narrow", "normal");
   doc.text("BENEFICE NET", pageWidth - margin - cardWidth / 2, currentY + 6, { align: "center" });
   doc.setFontSize(13);
-  doc.setFont("Times", "bold");
+  doc.setFont("Arial Narrow", "bold");
   doc.text(formatMontant(financialData.totals.benefice), pageWidth - margin - cardWidth / 2, currentY + 15, { align: "center" });
 
   currentY += 30;
 
   doc.setFontSize(13);
-  doc.setFont("Times", "bold");
-  doc.setTextColor(41, 128, 185);
+  doc.setFont("Arial Narrow", "bold");
+  doc.setTextColor(0, 0, 0);
   doc.text("DETAIL PAR PROPRIETAIRE", margin, currentY);
   currentY += 6;
 
@@ -1363,7 +1412,10 @@ export const generateRapportPDF = async (financialData: any, selectedMonth: stri
     body: tableData,
     theme: "grid",
     headStyles: {
-      fillColor: [52, 73, 94],
+      fillColor: [255, 255, 255],
+      textColor: [0, 0, 0],
+      lineWidth: 0.1,
+      lineColor: [0, 0, 0],
       fontSize: 9,
       fontStyle: "bold",
       halign: "center"
@@ -1389,10 +1441,24 @@ export const generateRapportPDF = async (financialData: any, selectedMonth: stri
     }
   });
 
+  // SIGNATURE
+  currentY += 20;
+  if (currentY > pageHeight - 40) {
+    doc.addPage();
+    currentY = margin + 20;
+  }
+  doc.setFontSize(11);
+  doc.setFont("Arial Narrow", "normal");
+  doc.setTextColor(0, 0, 0);
+  doc.text(`Fait à Kara le, ${new Date().toLocaleDateString("fr-FR")}`, pageWidth - margin, currentY, { align: "right" });
+  doc.setFont("Arial Narrow", "bold");
+  doc.text("Le Directeur", pageWidth - margin, currentY + 10, { align: "right" });
+
+  // FOOTER
   doc.setFontSize(9);
-  doc.setTextColor(120, 120, 120);
-  doc.setFont("Times", "italic");
-  doc.text("Rapport genere automatiquement par Phenix Immobilier", pageWidth / 2, pageHeight - 10, { align: "center" });
+  doc.setFont("Arial Narrow", "italic");
+  doc.setTextColor(100, 100, 100);
+  doc.text("Phenix Immobilier & Services - Votre partenaire de confiance", pageWidth / 2, pageHeight - 10, { align: "center" });
 
   const fileName = `Rapport_Financier_${selectedMonth}.pdf`;
   doc.save(fileName);
@@ -1415,68 +1481,94 @@ export const generateDailyReportPDF = async (
   logoBase64: string
 ) => {
   const doc = new jsPDF();
+  await loadFonts(doc);
+
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
 
-  // Header with logo
+  // HEADER
   if (logoBase64) {
-    doc.addImage(logoBase64, "JPEG", 15, 10, 30, 15);
+    try {
+      doc.setFillColor(255, 255, 255);
+      doc.rect(15, 10, 20, 20, "F");
+      doc.addImage(logoBase64, "PNG", 15, 10, 20, 20);
+    } catch (error) {
+      console.error("Error adding logo:", error);
+    }
   }
 
-  doc.setFontSize(6);
-  doc.setFont("Times", "bold");
+  doc.setFontSize(16);
+  doc.setFont("Arial Narrow", "bold");
   doc.setTextColor(0, 0, 0);
-  doc.text("AGENCE IMMOBILIERE PHENIX", 15, 28);
+  doc.text("AGENCE IMMOBILIERE PHENIX", logoBase64 ? 40 : 15, 17);
 
-  doc.setFontSize(20);
-  doc.setFont("Times", "bold");
-  doc.setTextColor(0, 102, 204);
-  doc.text("RAPPORT JOURNALIER", pageWidth / 2, 40, { align: "center" });
+  doc.setFontSize(10);
+  doc.setFont("Arial Narrow", "normal");
+  doc.text("Tel: +228 91 77 15 36", logoBase64 ? 40 : 15, 22);
+  doc.text("Email: essoham.aledi@gmail.com", logoBase64 ? 40 : 15, 27);
 
-  doc.setFontSize(12);
-  doc.setFont("Times", "normal");
-  doc.setTextColor(80, 80, 80);
-  const dateFormatted = new Date(selectedDate).toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
-  doc.text(dateFormatted, pageWidth / 2, 48, { align: "center" });
+  doc.setFontSize(14);
+  doc.setFont("Arial Narrow", "bold");
+  doc.text("JOURNAL DE CAISSE", pageWidth - 15, 17, { align: "right" });
 
-  // Summary boxes
-  let yPos = 60;
+  doc.setFontSize(10);
+  doc.setFont("Arial Narrow", "normal");
+  doc.text(`Date: ${new Date(selectedDate).toLocaleDateString("fr-FR")}`, pageWidth - 15, 22, { align: "right" });
+  doc.text(`Fait le: ${new Date().toLocaleDateString("fr-FR")}`, pageWidth - 15, 27, { align: "right" });
 
-  doc.setFillColor(220, 240, 255);
-  doc.rect(15, yPos, 60, 20, 'F');
+  let currentY = 35;
+
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.5);
+  doc.line(15, currentY, pageWidth - 15, currentY);
+
+  currentY += 10;
+
+  // TITRE CENTRAL ENCADRÉ (SOBRIÉTÉ)
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.3);
+  doc.rect(15, currentY - 6, pageWidth - 30, 10);
+  doc.setFontSize(14);
+  doc.setFont("Arial Narrow", "bold");
+  doc.setTextColor(0, 0, 0);
+  doc.text(`JOURNAL DE CAISSE DU ${new Date(selectedDate).toLocaleDateString("fr-FR")}`, pageWidth / 2, currentY, { align: "center" });
+
+  currentY += 12;
+  const yPosInit = currentY;
+  let yPos = currentY;
+
+  // Summary boxes (SOBRIÉTÉ)
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.1);
+
+  doc.rect(15, currentY, 60, 20);
   doc.setFontSize(10);
   doc.setTextColor(60, 60, 60);
-  doc.text("Total Paiements", 45, yPos + 7, { align: "center" });
+  doc.text("Total Paiements", 45, currentY + 7, { align: "center" });
   doc.setFontSize(14);
-  doc.setFont("Times", "bold");
-  doc.setTextColor(0, 102, 204);
-  doc.text(`${totalPaiements.toLocaleString('fr-FR')} FCFA`, 45, yPos + 15, { align: "center" });
+  doc.setFont("Arial Narrow", "bold");
+  doc.setTextColor(0, 0, 0);
+  doc.text(`${totalPaiements.toLocaleString('fr-FR')} FCFA`, 45, currentY + 15, { align: "center" });
 
-  doc.setFillColor(255, 220, 220);
-  doc.rect(80, yPos, 60, 20, 'F');
+  doc.rect(80, currentY, 60, 20);
   doc.setFontSize(10);
-  doc.setFont("Times", "normal");
+  doc.setFont("Arial Narrow", "normal");
   doc.setTextColor(60, 60, 60);
-  doc.text("Total Depenses", 110, yPos + 7, { align: "center" });
+  doc.text("Total Depenses", 110, currentY + 7, { align: "center" });
   doc.setFontSize(14);
-  doc.setFont("Times", "bold");
-  doc.setTextColor(204, 0, 0);
-  doc.text(`${totalDepenses.toLocaleString('fr-FR')} FCFA`, 110, yPos + 15, { align: "center" });
+  doc.setFont("Arial Narrow", "bold");
+  doc.setTextColor(0, 0, 0);
+  doc.text(`${totalDepenses.toLocaleString('fr-FR')} FCFA`, 110, currentY + 15, { align: "center" });
 
-  doc.setFillColor(220, 255, 220);
-  doc.rect(145, yPos, 50, 20, 'F');
+  doc.rect(145, currentY, 50, 20);
   doc.setFontSize(10);
-  doc.setFont("Times", "normal");
+  doc.setFont("Arial Narrow", "normal");
   doc.setTextColor(60, 60, 60);
-  doc.text("Solde Net", 170, yPos + 7, { align: "center" });
+  doc.text("Solde Net", 170, currentY + 7, { align: "center" });
   doc.setFontSize(14);
-  doc.setFont("Times", "bold");
-  doc.setTextColor(0, 153, 0);
-  doc.text(`${(totalPaiements - totalDepenses).toLocaleString('fr-FR')} FCFA`, 170, yPos + 15, { align: "center" });
+  doc.setFont("Arial Narrow", "bold");
+  doc.setTextColor(0, 0, 0);
+  doc.text(`${(totalPaiements - totalDepenses).toLocaleString('fr-FR')} FCFA`, 170, currentY + 15, { align: "center" });
 
   yPos = 70;
 
@@ -1488,20 +1580,19 @@ export const generateDailyReportPDF = async (
       yPos = 20;
     }
 
-    // Owner header
-    doc.setFillColor(240, 240, 240);
-    doc.rect(15, yPos, pageWidth - 30, 10, 'F');
+    // Owner header (Minimaliste)
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.1);
+    doc.rect(15, yPos, pageWidth - 30, 10);
     doc.setFontSize(14);
-    doc.setFont("Times", "bold");
-    doc.setTextColor(40, 40, 40);
+    doc.setFont("Arial Narrow", "bold");
+    doc.setTextColor(0, 0, 0);
     doc.text(propData.proprietaire.nom, 20, yPos + 7);
 
-    doc.setFont("Times", "normal");
+    doc.setFont("Arial Narrow", "normal");
     doc.setFontSize(12);
-    doc.setTextColor(0, 153, 0);
     doc.text(`+${propData.totalPaiements.toLocaleString('fr-FR')} FCFA`, pageWidth - 80, yPos + 7);
     if (propData.totalDepenses > 0) {
-      doc.setTextColor(204, 0, 0);
       doc.text(`-${propData.totalDepenses.toLocaleString('fr-FR')} FCFA`, pageWidth - 20, yPos + 7, { align: "right" });
     }
 
@@ -1510,8 +1601,8 @@ export const generateDailyReportPDF = async (
     // Payments
     if (propData.paiements.length > 0) {
       doc.setFontSize(12);
-      doc.setFont("Times", "bold");
-      doc.setTextColor(0, 102, 0);
+      doc.setFont("Arial Narrow", "bold");
+      doc.setTextColor(0, 0, 0);
       doc.text(`Paiements (${propData.paiements.length})`, 20, yPos);
       yPos += 5;
 
@@ -1526,9 +1617,16 @@ export const generateDailyReportPDF = async (
         startY: yPos,
         head: [['Locataire', 'Bien', 'Type', 'Montant']],
         body: paiementsData,
-        margin: { left: 20, right: 20 },
+        margin: { left: 15, right: 15 },
         styles: { fontSize: 11, cellPadding: 3 },
-        headStyles: { fillColor: [220, 255, 220], textColor: [0, 102, 0], fontStyle: 'bold', font: 'Times' },
+        headStyles: {
+          fillColor: [255, 255, 255],
+          textColor: [0, 0, 0],
+          lineWidth: 0.1,
+          lineColor: [0, 0, 0],
+          fontStyle: 'bold',
+          font: 'Arial Narrow'
+        },
         theme: 'grid'
       });
 
@@ -1543,8 +1641,8 @@ export const generateDailyReportPDF = async (
       }
 
       doc.setFontSize(12);
-      doc.setFont("Times", "bold");
-      doc.setTextColor(153, 0, 0);
+      doc.setFont("Arial Narrow", "bold");
+      doc.setTextColor(0, 0, 0);
       doc.text(`Depenses (${propData.depenses.length})`, 20, yPos);
       yPos += 5;
 
@@ -1559,9 +1657,16 @@ export const generateDailyReportPDF = async (
         startY: yPos,
         head: [['Description', 'Bien', 'Categorie', 'Montant']],
         body: depensesData,
-        margin: { left: 20, right: 20 },
+        margin: { left: 15, right: 15 },
         styles: { fontSize: 11, cellPadding: 3 },
-        headStyles: { fillColor: [255, 220, 220], textColor: [153, 0, 0], fontStyle: 'bold', font: 'Times' },
+        headStyles: {
+          fillColor: [255, 255, 255],
+          textColor: [0, 0, 0],
+          lineWidth: 0.1,
+          lineColor: [0, 0, 0],
+          fontStyle: 'bold',
+          font: 'Arial Narrow'
+        },
         theme: 'grid'
       });
 
@@ -1569,13 +1674,212 @@ export const generateDailyReportPDF = async (
     }
   }
 
+  // SIGNATURE
+  currentY = yPos + 20;
+  if (currentY > pageHeight - 40) {
+    doc.addPage();
+    currentY = 20;
+  }
+  doc.setFontSize(11);
+  doc.setFont("Arial Narrow", "normal");
+  doc.setTextColor(0, 0, 0);
+  doc.text(`Fait à Kara le, ${new Date().toLocaleDateString("fr-FR")}`, pageWidth - 15, currentY, { align: "right" });
+  doc.setFont("Arial Narrow", "bold");
+  doc.text("Le Directeur", pageWidth - 15, currentY + 10, { align: "right" });
+
   // Footer
   doc.setFontSize(9);
-  doc.setTextColor(120, 120, 120);
-  doc.setFont("Times", "italic");
-  doc.text("Rapport genere automatiquement par Phenix Immobilier", pageWidth / 2, pageHeight - 10, { align: "center" });
+  doc.setFont("Arial Narrow", "italic");
+  doc.setTextColor(100, 100, 100);
+  doc.text("Phenix Immobilier & Services - Votre partenaire de confiance", pageWidth / 2, pageHeight - 10, { align: "center" });
 
   const fileName = `Rapport_Journalier_${selectedDate}.pdf`;
   doc.save(fileName);
 };
+
+// ========== DOCUMENTS SERVICES (Devis, Facture, Proforma) ==========
+interface ServiceDocumentData {
+  serviceNom: string;
+  clientNom: string;
+  type: "proforma" | "facture" | "devis";
+  items: Array<{
+    description: string;
+    quantite: number;
+    prix_unitaire: number;
+  }>;
+  montant_total: number;
+  montant_paye?: number;
+  date_document: string;
+}
+
+export const generateServiceDocumentPDF = async (
+  data: ServiceDocumentData,
+  logoBase64?: string
+) => {
+  const doc = new jsPDF({
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4",
+  });
+
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 20;
+  const contentWidth = pageWidth - 2 * margin;
+  let currentY = margin;
+
+  // HEADER
+  if (logoBase64) {
+    try {
+      doc.setFillColor(255, 255, 255);
+      doc.rect(margin, currentY, 20, 20, "F");
+      doc.addImage(logoBase64, "PNG", margin, currentY, 20, 20);
+    } catch (error) {
+      console.error("Error adding logo:", error);
+    }
+  }
+
+  doc.setFontSize(16);
+  doc.setFont("Arial Narrow", "bold");
+  doc.setTextColor(0, 0, 0);
+  doc.text("AGENCE IMMOBILIERE PHENIX", logoBase64 ? margin + 25 : margin, currentY + 7);
+
+  doc.setFontSize(10);
+  doc.setFont("Arial Narrow", "normal");
+  doc.text("Tel: +228 91 77 15 36", logoBase64 ? margin + 25 : margin, currentY + 12);
+  doc.text("Email: essoham.aledi@gmail.com", logoBase64 ? margin + 25 : margin, currentY + 17);
+
+  const titleType = data.type.toUpperCase();
+  doc.setFontSize(14);
+  doc.setFont("Arial Narrow", "bold");
+  doc.text(titleType, pageWidth - margin, currentY + 7, { align: "right" });
+
+  doc.setFontSize(10);
+  doc.setFont("Arial Narrow", "normal");
+  doc.text(`Date: ${new Date(data.date_document).toLocaleDateString("fr-FR")}`, pageWidth - margin, currentY + 12, { align: "right" });
+
+  currentY += 30;
+
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.5);
+  doc.line(margin, currentY, pageWidth - margin, currentY);
+  currentY += 10;
+
+  // CLIENT & SERVICE
+  doc.setFontSize(12);
+  doc.setFont("Arial Narrow", "bold");
+  doc.text("CLIENT:", margin, currentY);
+  doc.setFont("Arial Narrow", "normal");
+  doc.text(data.clientNom, margin + 20, currentY);
+
+  currentY += 8;
+  doc.setFont("Arial Narrow", "bold");
+  doc.text("SERVICE:", margin, currentY);
+  doc.setFont("Arial Narrow", "normal");
+  doc.text(data.serviceNom, margin + 20, currentY);
+
+  currentY += 12;
+
+  // TABLE ITEMS
+  const tableData = data.items.map((item, index) => [
+    String(index + 1),
+    item.description,
+    String(item.quantite),
+    formatNumber(item.prix_unitaire),
+    formatNumber(item.quantite * item.prix_unitaire)
+  ]);
+
+  autoTable(doc, {
+    startY: currentY,
+    head: [["N°", "Description", "Qté", "P.U (FCFA)", "Total (FCFA)"]],
+    body: tableData,
+    theme: "grid",
+    styles: { font: "Arial Narrow", fontSize: 10, cellPadding: 3 },
+    headStyles: {
+      fillColor: [255, 255, 255],
+      textColor: [0, 0, 0],
+      lineWidth: 0.1,
+      lineColor: [0, 0, 0],
+      fontStyle: "bold",
+      halign: "center"
+    },
+    columnStyles: {
+      0: { halign: "center", cellWidth: 10 },
+      1: { halign: "left" },
+      2: { halign: "center", cellWidth: 15 },
+      3: { halign: "right", cellWidth: 30 },
+      4: { halign: "right", cellWidth: 35 },
+    },
+    margin: { left: margin, right: margin },
+  });
+
+  currentY = (doc as any).lastAutoTable.finalY + 10;
+
+  // TOTALS
+  const totalBoxWidth = 80;
+  const startX = pageWidth - margin - totalBoxWidth;
+
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.5);
+
+  // Total Box
+  doc.rect(startX, currentY, totalBoxWidth, 10);
+  doc.setFontSize(11);
+  doc.setFont("Arial Narrow", "bold");
+  doc.text("TOTAL NET:", startX + 5, currentY + 6.5);
+  doc.text(`${formatNumber(data.montant_total)} FCFA`, pageWidth - margin - 5, currentY + 6.5, { align: "right" });
+
+  currentY += 10;
+
+  if (data.type === "facture" && data.montant_paye !== undefined) {
+    // Montant Versé Box
+    doc.rect(startX, currentY, totalBoxWidth, 10);
+    doc.text("MONTANT VERSE:", startX + 5, currentY + 6.5);
+    doc.text(`${formatNumber(data.montant_paye)} FCFA`, pageWidth - margin - 5, currentY + 6.5, { align: "right" });
+
+    currentY += 10;
+
+    // Reste à Payer Box
+    const reste = data.montant_total - data.montant_paye;
+    doc.setFillColor(240, 240, 240);
+    doc.rect(startX, currentY, totalBoxWidth, 10, "FD");
+    doc.text(reste <= 0 ? "SOLDE:" : "RESTE A PAYER:", startX + 5, currentY + 6.5);
+    doc.text(`${formatNumber(reste)} FCFA`, pageWidth - margin - 5, currentY + 6.5, { align: "right" });
+
+    if (reste <= 0) {
+      // Stamp "SOLDE"
+      doc.setFontSize(30);
+      doc.setTextColor(0, 150, 0);
+      doc.setFont("Arial Narrow", "bold");
+      doc.text("SOLDE", margin + 10, currentY - 5, { angle: 15 });
+      doc.setTextColor(0, 0, 0); // Reset color
+    }
+
+    currentY += 15;
+  } else {
+    currentY += 10;
+  }
+
+  // SIGNATURE
+  if (currentY > pageHeight - 40) {
+    doc.addPage();
+    currentY = margin;
+  }
+
+  doc.setFontSize(11);
+  doc.setFont("Arial Narrow", "normal");
+  doc.text(`Fait à Kara le, ${new Date().toLocaleDateString("fr-FR")}`, pageWidth - margin, currentY, { align: "right" });
+  doc.setFont("Arial Narrow", "bold");
+  doc.text("Le Directeur", pageWidth - margin, currentY + 10, { align: "right" });
+
+  // FOOTER
+  doc.setFontSize(9);
+  doc.setFont("Arial Narrow", "italic");
+  doc.setTextColor(100, 100, 100);
+  doc.text("Merci pour votre confiance. - Phenix Immobilier & Services", pageWidth / 2, pageHeight - 10, { align: "center" });
+
+  const fileName = `${data.type.charAt(0).toUpperCase() + data.type.slice(1)}_${data.clientNom.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.pdf`;
+  doc.save(fileName);
+};
+
 

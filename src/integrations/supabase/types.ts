@@ -183,18 +183,19 @@ export type Database = {
       }
       depenses: {
         Row: {
-          bien_id: string
-          categorie: Database["public"]["Enums"]["categorie_depense"]
-          created_at: string
-          date_depense: string
-          description: string
           id: string
           montant: number
           recu_url: string | null
           updated_at: string
+          service_id: string | null
+          bien_id: string | null
+          categorie: Database["public"]["Enums"]["categorie_depense"]
+          created_at: string
+          date_depense: string
+          description: string
         }
         Insert: {
-          bien_id: string
+          bien_id?: string | null
           categorie: Database["public"]["Enums"]["categorie_depense"]
           created_at?: string
           date_depense?: string
@@ -203,9 +204,10 @@ export type Database = {
           montant: number
           recu_url?: string | null
           updated_at?: string
+          service_id?: string | null
         }
         Update: {
-          bien_id?: string
+          bien_id?: string | null
           categorie?: Database["public"]["Enums"]["categorie_depense"]
           created_at?: string
           date_depense?: string
@@ -214,6 +216,7 @@ export type Database = {
           montant?: number
           recu_url?: string | null
           updated_at?: string
+          service_id?: string | null
         }
         Relationships: [
           {
@@ -316,12 +319,8 @@ export type Database = {
       }
       paiements: {
         Row: {
-          bien_id: string
-          contrat_id: string
-          created_at: string
-          date_paiement: string
           id: string
-          locataire_id: string
+          locataire_id: string | null
           mois_concerne: string | null
           montant: number
           notes: string | null
@@ -329,14 +328,15 @@ export type Database = {
           statut: Database["public"]["Enums"]["statut_paiement"]
           type: Database["public"]["Enums"]["type_paiement"]
           updated_at: string
+          service_id: string | null
         }
         Insert: {
-          bien_id: string
-          contrat_id: string
+          bien_id?: string | null
+          contrat_id?: string | null
           created_at?: string
           date_paiement?: string
           id?: string
-          locataire_id: string
+          locataire_id?: string | null
           mois_concerne?: string | null
           montant: number
           notes?: string | null
@@ -344,14 +344,15 @@ export type Database = {
           statut?: Database["public"]["Enums"]["statut_paiement"]
           type: Database["public"]["Enums"]["type_paiement"]
           updated_at?: string
+          service_id?: string | null
         }
         Update: {
-          bien_id?: string
-          contrat_id?: string
+          bien_id?: string | null
+          contrat_id?: string | null
           created_at?: string
           date_paiement?: string
           id?: string
-          locataire_id?: string
+          locataire_id?: string | null
           mois_concerne?: string | null
           montant?: number
           notes?: string | null
@@ -359,6 +360,7 @@ export type Database = {
           statut?: Database["public"]["Enums"]["statut_paiement"]
           type?: Database["public"]["Enums"]["type_paiement"]
           updated_at?: string
+          service_id?: string | null
         }
         Relationships: [
           {
@@ -508,6 +510,71 @@ export type Database = {
             columns: ["bien_id"]
             isOneToOne: false
             referencedRelation: "biens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      services: {
+        Row: {
+          id: string
+          nom: string
+          description: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          nom: string
+          description?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          nom?: string
+          description?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      documents_services: {
+        Row: {
+          id: string
+          service_id: string | null
+          client_nom: string
+          type: "proforma" | "facture" | "devis"
+          montant_total: number
+          montant_paye: number
+          date_document: string
+          donnees_json: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          service_id?: string | null
+          client_nom: string
+          type: "proforma" | "facture" | "devis"
+          montant_total: number
+          montant_paye?: number
+          date_document?: string
+          donnees_json?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          service_id?: string | null
+          client_nom?: string
+          type?: "proforma" | "facture" | "devis"
+          montant_total?: number
+          montant_paye?: number
+          date_document?: string
+          donnees_json?: Json
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_services_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
             referencedColumns: ["id"]
           },
         ]

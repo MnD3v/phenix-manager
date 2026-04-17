@@ -15,6 +15,8 @@ import Depenses from "./pages/Depenses";
 import Notifications from "./pages/Notifications";
 import Rapports from "./pages/Rapports";
 import AuditLogs from "./pages/AuditLogs";
+import Services from "./pages/Services";
+import ServiceDetails from "./pages/ServiceDetails";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import EtatParc from "./pages/EtatParc";
@@ -109,6 +111,8 @@ const App = () => {
                               <Route path="/notifications" element={<Notifications />} />
                               <Route path="/rapports" element={<Rapports />} />
                               <Route path="/audit-logs" element={<AuditLogs />} />
+                              <Route path="/services" element={<Services />} />
+                              <Route path="/services/:id" element={<ServiceDetails />} />
                               <Route path="/etat-parc" element={<EtatParc />} />
                               <Route path="/arrieres" element={<Arrieres />} />
                               <Route path="/debug-data" element={<DebugData />} />
