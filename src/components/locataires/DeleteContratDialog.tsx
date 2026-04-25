@@ -24,8 +24,14 @@ export const DeleteContratDialog = ({ contrat, open, onOpenChange }: DeleteContr
     mutationFn: async () => {
       // NOTE: We keep payments for history purposes even if the contract is deleted
       // The payments will remain linked to the tenant and property
-      // To delete payments, they must be deleted manually or via tenant permanent deletion
+      // On supprime les paiements liés au contrat car la base de données 
+      // interdit de garder un paiement sans contrat (contrainte NOT NULL sur contrat_id)
+      const { error: deletePaiementsError } = await supabase
+        .from("paiements")
+        .delete()
+        .eq("contrat_id", contrat.id);
 
+      if (deletePaiementsError) throw deletePaiementsError;
 
       // Supprimer le contrat
       const { error } = await supabase.from("contrats").delete().eq("id", contrat.id);
@@ -56,6 +62,10 @@ export const DeleteContratDialog = ({ contrat, open, onOpenChange }: DeleteContr
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["contrats"] });
       queryClient.invalidateQueries({ queryKey: ["biens"] });
+      queryClient.invalidateQueries({ queryKey: ["biens-disponibles"] });
+      queryClient.invalidateQueries({ queryKey: ["proprietaire-biens"] });
+      queryClient.invalidateQueries({ queryKey: ["etat-parc"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       queryClient.invalidateQueries({ queryKey: ["paiements"] });
       queryClient.invalidateQueries({ queryKey: ["locataires"] });
       queryClient.invalidateQueries({ queryKey: ["deleted-locataires"] });

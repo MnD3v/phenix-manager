@@ -127,6 +127,10 @@ export const AddContratDialog = () => {
       queryClient.invalidateQueries({ queryKey: ["contrats-actifs"] });
       queryClient.invalidateQueries({ queryKey: ["locataires"] });
       queryClient.invalidateQueries({ queryKey: ["biens"] });
+      queryClient.invalidateQueries({ queryKey: ["biens-disponibles"] });
+      queryClient.invalidateQueries({ queryKey: ["proprietaire-biens"] });
+      queryClient.invalidateQueries({ queryKey: ["etat-parc"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       queryClient.invalidateQueries({ queryKey: ["paiements"] });
       toast.success("Contrat créé avec succès");
       setOpen(false);
@@ -155,8 +159,20 @@ export const AddContratDialog = () => {
 
   const handleNext = () => {
     if (step === 1) {
+      if (!bienId) {
+        toast.error("Veuillez sélectionner un bien");
+        return;
+      }
+      if (!cautionMois) {
+        toast.error("Veuillez définir la caution");
+        return;
+      }
       setStep(2);
     } else {
+      if (!nom || !telephone) {
+        toast.error("Veuillez remplir les informations obligatoires du locataire");
+        return;
+      }
       createMutation.mutate();
     }
   };
@@ -173,34 +189,11 @@ export const AddContratDialog = () => {
         <DialogHeader>
           <DialogTitle>Nouveau Contrat - Étape {step}/2</DialogTitle>
           <DialogDescription>
-            {step === 1 ? "Informations du locataire" : "Détails du contrat"}
+            {step === 1 ? "Détails du contrat" : "Informations du locataire"}
           </DialogDescription>
         </DialogHeader>
 
         {step === 1 ? (
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="nom">Nom complet *</Label>
-              <Input id="nom" value={nom} onChange={(e) => setNom(e.target.value)} required className="w-full" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="telephone">Téléphone *</Label>
-              <Input id="telephone" value={telephone} onChange={(e) => setTelephone(e.target.value)} required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="adresse">Adresse</Label>
-              <Input id="adresse" value={adresse} onChange={(e) => setAdresse(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="piece">Pièce d'identité</Label>
-              <Input id="piece" value={pieceIdentite} onChange={(e) => setPieceIdentite(e.target.value)} />
-            </div>
-          </div>
-        ) : (
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <div className="space-y-2">
@@ -300,6 +293,29 @@ export const AddContratDialog = () => {
                   <Label htmlFor="sms-non" className="cursor-pointer">Non</Label>
                 </div>
               </RadioGroup>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="nom">Nom complet *</Label>
+              <Input id="nom" value={nom} onChange={(e) => setNom(e.target.value)} required className="w-full" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="telephone">Téléphone *</Label>
+              <Input id="telephone" value={telephone} onChange={(e) => setTelephone(e.target.value)} required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="adresse">Adresse</Label>
+              <Input id="adresse" value={adresse} onChange={(e) => setAdresse(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="piece">Pièce d'identité</Label>
+              <Input id="piece" value={pieceIdentite} onChange={(e) => setPieceIdentite(e.target.value)} />
             </div>
           </div>
         )}

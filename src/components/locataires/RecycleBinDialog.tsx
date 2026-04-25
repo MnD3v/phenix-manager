@@ -55,37 +55,13 @@ export const RecycleBinDialog = () => {
             if (paiementsError) throw paiementsError;
             */
 
-            // Note: If we don't delete payments, we might have foreign key constraint issues if the payments table 
-            // has "ON DELETE CASCADE" or restrict on locataire_id. 
-            // In the provided schema: 
-            // ALTER TABLE ONLY public.paiements ADD CONSTRAINT paiements_locataire_id_fkey FOREIGN KEY (locataire_id) REFERENCES public.locataires(id) ON DELETE RESTRICT;
-            // This means we CANNOT delete the tenant if payments exist. 
-            // So we actually have to update the payments to set locataire_id to NULL (if allowed) or we simply cannot delete the tenant.
-
-            // To respect "Payments must be kept", we cannot delete the tenant from the database if they have payments.
-            // But this is "Delete Permanently". 
-            // Option 1: Set locataire_id in payments to NULL. (But schema says locataire_id is NOT NULL in paiements table?)
-            // Schema: locataire_id uuid NOT NULL
-
-            // If locataire_id is NOT NULL, we absolutely cannot delete the tenant and keep the payment. 
-            // The only solution is to anonymize the tenant instead of deleting, OR the user must accept that "Delete Permanently" means deleting payments too.
-
-            // However, typically "Delete Permanently" means "I made a mistake or I want everything gone".
-            // If you want to keep history, you shouldn't delete the tenant permanently.
-
-            // Re-reading request: "Les paiement associé au contrats ne doivent pas être supprimé lors de la suppression du locataire."
-            // If this refers to the Soft Delete (moving to corbeille), we are already good (soft delete is just an update).
-            // If this refers to "Terminer le contrat", we fixed that in step 1.
-            // If this refers to "Supprimer définitivement" in the Recycle Bin... 
-            // It is technically impossible to delete a User row if a Payment row references it and the FK is RESTRICT.
-
-            // I will assume the user mainly meant "Delete Contract" should not delete payments.
-            // But if they try to delete the tenant permanently here, it will fail if payments exist due to FK RESTRICT.
-
-            // For now, I will NOT delete payments here. If the DB has ON DELETE CASCADE, they will vanish. 
-            // If it has RESTRICT, the deletion will fail and throw an error, which is safer than deleting data the user wanted to keep.
-
-            // I will remove the explicit payment deletion. 
+            // On supprime d'abord les paiements liés au locataire car la base de données 
+            // exige qu'ils soient rattachés à un contrat_id NOT NULL qui sera aussi supprimé.
+            const { error: updatePaiementsError } = await supabase
+                .from("paiements")
+                .delete()
+                .eq("locataire_id", locataire.id);
+            if (updatePaiementsError) throw updatePaiementsError;
 
 
             // 2. Delete associated contracts

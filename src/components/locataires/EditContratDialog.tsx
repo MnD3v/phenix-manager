@@ -135,6 +135,10 @@ export const EditContratDialog = ({ contrat, open, onOpenChange }: EditContratDi
       queryClient.invalidateQueries({ queryKey: ["contrats"] });
       queryClient.invalidateQueries({ queryKey: ["contrats-actifs"] });
       queryClient.invalidateQueries({ queryKey: ["biens"] });
+      queryClient.invalidateQueries({ queryKey: ["biens-disponibles"] });
+      queryClient.invalidateQueries({ queryKey: ["proprietaire-biens"] });
+      queryClient.invalidateQueries({ queryKey: ["etat-parc"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       queryClient.invalidateQueries({ queryKey: ["paiements"] });
       queryClient.invalidateQueries({ queryKey: ["paiements-contrat"] });
       queryClient.invalidateQueries({ queryKey: ["locataires"] });
